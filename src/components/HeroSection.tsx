@@ -10,7 +10,6 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 
 const categories = [
-  { id: 'all', label: 'All', icon: '🏠' },
   { id: 'house', label: 'Houses', icon: '🏡' },
   { id: 'apartment', label: 'Apartments', icon: '🏢' },
   { id: 'shortlet', label: 'Shortlets', icon: '🏨' },
@@ -39,7 +38,19 @@ export interface Filters {
   verified: boolean;
   serviced: 'any' | 'serviced' | 'unserviced';
   furnished: 'any' | 'furnished' | 'unfurnished';
+  minPrice: number;
+  maxPrice: number;
 }
+
+const priceRanges = [
+  { label: 'Any', min: 0, max: Infinity },
+  { label: 'Under ₦5M', min: 0, max: 5000000 },
+  { label: '₦5M - ₦20M', min: 5000000, max: 20000000 },
+  { label: '₦20M - ₦50M', min: 20000000, max: 50000000 },
+  { label: '₦50M - ₦100M', min: 50000000, max: 100000000 },
+  { label: '₦100M - ₦500M', min: 100000000, max: 500000000 },
+  { label: 'Over ₦500M', min: 500000000, max: Infinity },
+];
 
 interface HeroSectionProps {
   onCategoryChange?: (category: string) => void;
@@ -56,11 +67,13 @@ const defaultFilters: Filters = {
   verified: false,
   serviced: 'any',
   furnished: 'any',
+  minPrice: 0,
+  maxPrice: Infinity,
 };
 
 export const HeroSection = ({ 
   onCategoryChange, 
-  activeCategory = 'all',
+  activeCategory = 'house',
   onFiltersChange,
   filters = defaultFilters
 }: HeroSectionProps) => {
@@ -90,6 +103,7 @@ export const HeroSection = ({
     localFilters.verified,
     localFilters.serviced !== 'any',
     localFilters.furnished !== 'any',
+    localFilters.minPrice > 0 || localFilters.maxPrice < Infinity,
   ].filter(Boolean).length;
 
   const toggleFeature = (feature: string) => {
@@ -239,6 +253,29 @@ export const HeroSection = ({
                   >
                     Clear all
                   </button>
+                </div>
+
+                {/* Price Range Filter */}
+                <div>
+                  <h4 className="text-sm font-medium mb-2">Price Range</h4>
+                  <div className="flex flex-col gap-1">
+                    {priceRanges.map((range) => (
+                      <button
+                        key={range.label}
+                        onClick={() => {
+                          updateFilter('minPrice', range.min);
+                          updateFilter('maxPrice', range.max);
+                        }}
+                        className={`px-3 py-2 text-left rounded-lg text-sm transition-colors ${
+                          localFilters.minPrice === range.min && localFilters.maxPrice === range.max
+                            ? 'bg-primary text-primary-foreground'
+                            : 'hover:bg-muted'
+                        }`}
+                      >
+                        {range.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Serviced Filter */}

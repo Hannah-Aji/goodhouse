@@ -1,8 +1,9 @@
 import { Property, formatPrice } from '@/data/properties';
 import { Star } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import useEmblaCarousel from 'embla-carousel-react';
 
 interface PropertyCardProps {
   property: Property;
@@ -11,6 +12,24 @@ interface PropertyCardProps {
 
 export const PropertyCard = ({ property, index = 0 }: PropertyCardProps) => {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const onSelect = useCallback(() => {
+    if (!emblaApi) return;
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+  }, [emblaApi]);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+    emblaApi.on('select', onSelect);
+    onSelect();
+    return () => {
+      emblaApi.off('select', onSelect);
+    };
+  }, [emblaApi, onSelect]);
+
+  const images = property.images.length > 0 ? property.images : [property.image];
 
   return (
     <motion.article
@@ -19,26 +38,58 @@ export const PropertyCard = ({ property, index = 0 }: PropertyCardProps) => {
       transition={{ duration: 0.3, delay: index * 0.05 }}
       className="group cursor-pointer"
     >
-      <Link to={`/property/${property.id}`}>
-        {/* Image Container */}
-        <div className="relative aspect-square overflow-hidden rounded-xl mb-3">
-          <div className={`absolute inset-0 bg-muted ${imageLoaded ? 'hidden' : ''}`} />
-          <img
-            src={property.image}
-            alt={property.title}
-            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-            onLoad={() => setImageLoaded(true)}
-          />
-
-          {/* Type Badge */}
-          <div className="absolute top-3 left-3">
-            <span className="inline-block px-2.5 py-1 text-xs font-medium bg-background/90 backdrop-blur-sm rounded-md">
-              For {property.type === 'sale' ? 'Sale' : 'Rent'}
-            </span>
+      {/* Image Container with Carousel */}
+      <div className="relative aspect-square overflow-hidden rounded-xl mb-3">
+        <div ref={emblaRef} className="overflow-hidden h-full">
+          <div className="flex h-full">
+            {images.map((image, imgIndex) => (
+              <div key={imgIndex} className="flex-[0_0_100%] min-w-0 h-full relative">
+                <div className={`absolute inset-0 bg-muted ${imageLoaded && imgIndex === 0 ? 'hidden' : ''}`} />
+                <Link to={`/property/${property.id}`}>
+                  <img
+                    src={image}
+                    alt={`${property.title} ${imgIndex + 1}`}
+                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                    onLoad={() => imgIndex === 0 && setImageLoaded(true)}
+                  />
+                </Link>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Content */}
+        {/* Type Badge */}
+        <div className="absolute top-3 left-3 z-10">
+          <span className="inline-block px-2.5 py-1 text-xs font-medium bg-background/90 backdrop-blur-sm rounded-md">
+            For {property.type === 'sale' ? 'Sale' : 'Rent'}
+          </span>
+        </div>
+
+        {/* Carousel Dots */}
+        {images.length > 1 && (
+          <div className="absolute bottom-3 left-1/2 -translate-x-1/2 z-10 flex gap-1.5">
+            {images.map((_, dotIndex) => (
+              <button
+                key={dotIndex}
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  emblaApi?.scrollTo(dotIndex);
+                }}
+                className={`w-1.5 h-1.5 rounded-full transition-all ${
+                  selectedIndex === dotIndex
+                    ? 'bg-background w-3'
+                    : 'bg-background/60 hover:bg-background/80'
+                }`}
+                aria-label={`Go to image ${dotIndex + 1}`}
+              />
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* Content */}
+      <Link to={`/property/${property.id}`}>
         <div className="space-y-1">
           <div className="flex items-start justify-between gap-2">
             <p className="font-medium text-foreground">

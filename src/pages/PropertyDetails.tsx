@@ -419,6 +419,31 @@ const PropertyDetails = () => {
               {/* Description */}
               <div className="space-y-4">
                 <h2 className="text-xl font-semibold">About this property</h2>
+                
+                {/* Serviced & Furnished Pills */}
+                <div className="flex flex-wrap gap-2">
+                  {property.isServiced && (
+                    <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-primary/10 text-primary">
+                      Serviced
+                    </span>
+                  )}
+                  {property.isFurnished && (
+                    <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-primary/10 text-primary">
+                      Furnished
+                    </span>
+                  )}
+                  {!property.isServiced && (
+                    <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-muted text-muted-foreground">
+                      Unserviced
+                    </span>
+                  )}
+                  {!property.isFurnished && (
+                    <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-muted text-muted-foreground">
+                      Unfurnished
+                    </span>
+                  )}
+                </div>
+                
                 <p className="text-muted-foreground leading-relaxed">
                   {property.description}
                 </p>
