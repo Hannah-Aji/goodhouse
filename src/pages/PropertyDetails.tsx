@@ -39,6 +39,8 @@ const PropertyDetails = () => {
   const property = mockProperties.find(p => p.id === id);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
   const [showAllPhotos, setShowAllPhotos] = useState(false);
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isNotifyDialogOpen, setIsNotifyDialogOpen] = useState(false);
   const { toast } = useToast();
@@ -81,7 +83,12 @@ const PropertyDetails = () => {
     : null;
 
   return (
-    <div className="min-h-screen flex flex-col bg-background">
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+      className="min-h-screen flex flex-col bg-background"
+    >
       <Navbar />
       
       <main className="flex-1">
@@ -94,7 +101,12 @@ const PropertyDetails = () => {
         </div>
 
         {/* Image Gallery */}
-        <section className="container pb-8">
+        <motion.section 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.1 }}
+          className="container pb-8"
+        >
           <div className="grid grid-cols-1 md:grid-cols-4 gap-2 rounded-2xl overflow-hidden">
             {/* Main Image */}
             <div className="md:col-span-2 md:row-span-2 relative aspect-[4/3] md:aspect-auto">
@@ -138,10 +150,15 @@ const PropertyDetails = () => {
           >
             Show all {property.images.length} photos
           </Button>
-        </section>
+        </motion.section>
 
         {/* Content */}
-        <section className="container pb-16">
+        <motion.section 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.4, delay: 0.2 }}
+          className="container pb-16"
+        >
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             {/* Left Column - Details */}
             <div className="lg:col-span-2 space-y-8">
@@ -178,10 +195,38 @@ const PropertyDetails = () => {
                       <DialogHeader>
                         <DialogTitle>Get Price Alerts</DialogTitle>
                         <DialogDescription>
-                          Enter your phone number to receive notifications about price changes and similar listings.
+                          Enter your details to receive notifications about price changes and similar listings.
                         </DialogDescription>
                       </DialogHeader>
                       <div className="space-y-4 pt-4">
+                        <div className="grid grid-cols-2 gap-3">
+                          <div className="space-y-2">
+                            <label htmlFor="firstName" className="text-sm font-medium">
+                              First Name
+                            </label>
+                            <Input
+                              id="firstName"
+                              type="text"
+                              placeholder="John"
+                              value={firstName}
+                              onChange={(e) => setFirstName(e.target.value)}
+                              maxLength={50}
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <label htmlFor="lastName" className="text-sm font-medium">
+                              Last Name
+                            </label>
+                            <Input
+                              id="lastName"
+                              type="text"
+                              placeholder="Doe"
+                              value={lastName}
+                              onChange={(e) => setLastName(e.target.value)}
+                              maxLength={50}
+                            />
+                          </div>
+                        </div>
                         <div className="space-y-2">
                           <label htmlFor="phone" className="text-sm font-medium">
                             Phone Number
@@ -201,20 +246,38 @@ const PropertyDetails = () => {
                         <Button 
                           className="w-full" 
                           onClick={() => {
-                            if (phoneNumber.trim().length >= 10) {
+                            if (!firstName.trim()) {
                               toast({
-                                title: "Notifications enabled!",
-                                description: "You'll receive alerts at " + phoneNumber,
+                                title: "First name required",
+                                description: "Please enter your first name",
+                                variant: "destructive",
                               });
-                              setIsNotifyDialogOpen(false);
-                              setPhoneNumber('');
-                            } else {
+                              return;
+                            }
+                            if (!lastName.trim()) {
+                              toast({
+                                title: "Last name required",
+                                description: "Please enter your last name",
+                                variant: "destructive",
+                              });
+                              return;
+                            }
+                            if (phoneNumber.trim().length < 10) {
                               toast({
                                 title: "Invalid phone number",
                                 description: "Please enter a valid phone number",
                                 variant: "destructive",
                               });
+                              return;
                             }
+                            toast({
+                              title: "Notifications enabled!",
+                              description: `Hi ${firstName}, you'll receive alerts at ${phoneNumber}`,
+                            });
+                            setIsNotifyDialogOpen(false);
+                            setFirstName('');
+                            setLastName('');
+                            setPhoneNumber('');
                           }}
                         >
                           Enable Notifications
@@ -448,7 +511,7 @@ const PropertyDetails = () => {
               </div>
             </div>
           </div>
-        </section>
+        </motion.section>
       </main>
 
       {/* Full Screen Gallery Modal */}
@@ -529,7 +592,7 @@ const PropertyDetails = () => {
       </AnimatePresence>
 
       <Footer />
-    </div>
+    </motion.div>
   );
 };
 
