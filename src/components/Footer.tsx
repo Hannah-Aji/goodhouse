@@ -5,8 +5,6 @@ export const Footer = () => {
   const currentYear = new Date().getFullYear();
 
   const footerLinks = [
-    { label: 'About', href: '/about' },
-    { label: 'Privacy', href: '/privacy' },
     { label: 'Terms', href: '/terms' },
   ];
 
@@ -15,7 +13,7 @@ export const Footer = () => {
       <div className="container px-4 py-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-            <span>© {currentYear} Good Houses</span>
+            <span>© {currentYear} Good House</span>
             {footerLinks.map((link) => (
               <span key={link.href} className="flex items-center gap-4">
                 <span>·</span>
