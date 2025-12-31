@@ -134,16 +134,16 @@ export const HeroSection = ({
           <motion.div
             animate={{
               scale: [1, 1.02, 1],
-              opacity: [0.12, 0.18, 0.12],
+              opacity: [0.15, 0.25, 0.15],
             }}
             transition={{
               duration: 4,
               repeat: Infinity,
               ease: "easeInOut"
             }}
-            className="text-5xl md:text-7xl font-black tracking-tight text-cyan-400 blur-[3px] select-none"
+            className="text-3xl md:text-5xl font-black tracking-tight text-cyan-400 blur-[2px] select-none"
             style={{
-              textShadow: '0 0 40px rgba(34, 211, 238, 0.6), 0 0 80px rgba(34, 211, 238, 0.4)'
+              textShadow: '0 0 60px rgba(34, 211, 238, 0.8), 0 0 120px rgba(34, 211, 238, 0.5), 0 0 180px rgba(34, 211, 238, 0.3)'
             }}
           >
             good house

@@ -67,12 +67,12 @@ export const FeaturedProperties = ({
       <div className="container">
         {properties.length === 0 ? (
           <div className="text-center py-20">
-            <p className="text-muted-foreground">No properties found matching your criteria.</p>
+            <p className="text-muted-foreground">We couldn't quite find homes that fit your current needs. Check back later</p>
           </div>
         ) : (
           <>
             <p className="text-sm text-muted-foreground mb-6">
-              We found {properties.length} properties.
+              We found {properties.length} good options...
             </p>
             <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {properties.map((property, index) => (
