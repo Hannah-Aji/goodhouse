@@ -4,9 +4,17 @@ import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Input } from '@/components/ui/input';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { 
   ArrowLeft, 
-  Heart, 
   Share, 
   MapPin, 
   Bed, 
@@ -19,17 +27,21 @@ import {
   ChevronLeft,
   ChevronRight,
   Star,
-  ExternalLink
+  ExternalLink,
+  Bell
 } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useToast } from '@/hooks/use-toast';
 
 const PropertyDetails = () => {
   const { id } = useParams<{ id: string }>();
   const property = mockProperties.find(p => p.id === id);
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isLiked, setIsLiked] = useState(false);
   const [showAllPhotos, setShowAllPhotos] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [isNotifyDialogOpen, setIsNotifyDialogOpen] = useState(false);
+  const { toast } = useToast();
 
   if (!property) {
     return (
@@ -156,13 +168,6 @@ const PropertyDetails = () => {
                   </p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
-                  <Button 
-                    variant="outline" 
-                    size="icon"
-                    onClick={() => setIsLiked(!isLiked)}
-                  >
-                    <Heart className={`h-5 w-5 ${isLiked ? 'fill-primary text-primary' : ''}`} />
-                  </Button>
                   <Button variant="outline" size="icon">
                     <Share className="h-5 w-5" />
                   </Button>
@@ -315,30 +320,134 @@ const PropertyDetails = () => {
                   </p>
                 </div>
 
-                {/* Price Summary */}
-                <div className="bg-secondary/50 border border-border rounded-2xl p-6">
-                  <h3 className="text-lg font-semibold mb-4">Price Summary</h3>
-                  <div className="space-y-2">
-                    <div className="flex justify-between">
+                {/* Price Summary - Receipt Style */}
+                <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
+                  {/* Receipt Header */}
+                  <div className="bg-foreground text-background px-6 py-4 text-center">
+                    <h3 className="text-sm font-medium tracking-wider uppercase">Price Summary</h3>
+                  </div>
+                  
+                  {/* Receipt Body */}
+                  <div className="p-6 space-y-4 font-mono text-sm">
+                    {/* Dotted separator */}
+                    <div className="border-b-2 border-dashed border-border" />
+                    
+                    <div className="flex justify-between items-center">
                       <span className="text-muted-foreground">Listing Price</span>
-                      <span className="font-medium">{formatPriceFull(property.price)}</span>
+                      <span className="font-semibold">{formatPriceFull(property.price)}</span>
                     </div>
+                    
                     {property.type === 'rent' && property.priceUnit && (
                       <>
-                        <div className="flex justify-between">
+                        <div className="flex justify-between items-center">
                           <span className="text-muted-foreground">Payment Period</span>
                           <span className="font-medium capitalize">{property.priceUnit}ly</span>
                         </div>
-                        <div className="flex justify-between pt-2 border-t border-border">
-                          <span className="text-muted-foreground">Monthly Equivalent</span>
+                        
+                        <div className="border-b-2 border-dashed border-border" />
+                        
+                        <div className="flex justify-between items-center">
+                          <span className="text-muted-foreground">Monthly Equiv.</span>
                           <span className="font-medium">
                             {formatPrice(property.priceUnit === 'year' ? property.price / 12 : property.price)}
                           </span>
                         </div>
                       </>
                     )}
+                    
+                    {property.type === 'sale' && (
+                      <>
+                        <div className="flex justify-between items-center">
+                          <span className="text-muted-foreground">Type</span>
+                          <span className="font-medium">For Sale</span>
+                        </div>
+                        
+                        <div className="border-b-2 border-dashed border-border" />
+                        
+                        <div className="flex justify-between items-center">
+                          <span className="text-muted-foreground">Price/sqm</span>
+                          <span className="font-medium">
+                            {formatPrice(Math.round(property.price / property.size))}
+                          </span>
+                        </div>
+                      </>
+                    )}
+                    
+                    <div className="border-b-2 border-dashed border-border" />
+                    
+                    {/* Total */}
+                    <div className="flex justify-between items-center pt-2">
+                      <span className="font-bold text-foreground">TOTAL</span>
+                      <span className="font-bold text-lg text-foreground">{formatPriceFull(property.price)}</span>
+                    </div>
+                    
+                    {/* Receipt footer decoration */}
+                    <div className="pt-4 text-center text-xs text-muted-foreground">
+                      <p>Thank you for viewing!</p>
+                      <p className="mt-1">Ref: #{property.id.padStart(6, '0')}</p>
+                    </div>
                   </div>
+                  
+                  {/* Receipt tear effect */}
+                  <div className="h-4 bg-[repeating-linear-gradient(90deg,transparent,transparent_8px,hsl(var(--border))_8px,hsl(var(--border))_16px)]" />
                 </div>
+
+                {/* Notification Button */}
+                <Dialog open={isNotifyDialogOpen} onOpenChange={setIsNotifyDialogOpen}>
+                  <DialogTrigger asChild>
+                    <Button variant="outline" className="w-full gap-2" size="lg">
+                      <Bell className="h-4 w-4" />
+                      Get Notified
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-md">
+                    <DialogHeader>
+                      <DialogTitle>Get Price Alerts</DialogTitle>
+                      <DialogDescription>
+                        Enter your phone number to receive notifications about price changes and similar listings.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="space-y-4 pt-4">
+                      <div className="space-y-2">
+                        <label htmlFor="phone" className="text-sm font-medium">
+                          Phone Number
+                        </label>
+                        <Input
+                          id="phone"
+                          type="tel"
+                          placeholder="+234 800 000 0000"
+                          value={phoneNumber}
+                          onChange={(e) => setPhoneNumber(e.target.value)}
+                          maxLength={20}
+                        />
+                        <p className="text-xs text-muted-foreground">
+                          We'll send you SMS alerts about this property
+                        </p>
+                      </div>
+                      <Button 
+                        className="w-full" 
+                        onClick={() => {
+                          if (phoneNumber.trim().length >= 10) {
+                            toast({
+                              title: "Notifications enabled!",
+                              description: "You'll receive alerts at " + phoneNumber,
+                            });
+                            setIsNotifyDialogOpen(false);
+                            setPhoneNumber('');
+                          } else {
+                            toast({
+                              title: "Invalid phone number",
+                              description: "Please enter a valid phone number",
+                              variant: "destructive",
+                            });
+                          }
+                        }}
+                      >
+                        Enable Notifications
+                      </Button>
+                    </div>
+                  </DialogContent>
+                </Dialog>
               </div>
             </div>
           </div>
@@ -367,14 +476,9 @@ const PropertyDetails = () => {
               <span className="text-sm text-muted-foreground">
                 {currentImageIndex + 1} / {property.images.length}
               </span>
-              <div className="flex items-center gap-2">
-                <Button variant="ghost" size="icon" onClick={() => setIsLiked(!isLiked)}>
-                  <Heart className={`h-5 w-5 ${isLiked ? 'fill-primary text-primary' : ''}`} />
-                </Button>
-                <Button variant="ghost" size="icon">
-                  <Share className="h-5 w-5" />
-                </Button>
-              </div>
+              <Button variant="ghost" size="icon">
+                <Share className="h-5 w-5" />
+              </Button>
             </div>
 
             {/* Image */}
