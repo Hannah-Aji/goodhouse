@@ -82,13 +82,6 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
   return (
     <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b border-border/50">
       <div className="container flex h-20 items-center justify-between gap-4">
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-2 shrink-0">
-          <div className="flex flex-col leading-none">
-            <span className="text-xs font-medium text-muted-foreground tracking-wider uppercase">good</span>
-            <span className="text-xl font-bold text-foreground -mt-0.5">house</span>
-          </div>
-        </Link>
 
         {/* Center Search - Desktop */}
         <div className="hidden lg:flex flex-1 justify-center max-w-4xl">
