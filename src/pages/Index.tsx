@@ -18,6 +18,8 @@ const defaultFilters: Filters = {
   sizeRange: { min: 0, max: 10000 },
   features: [],
   verified: false,
+  serviced: 'any',
+  furnished: 'any',
 };
 
 const Index = () => {
@@ -99,6 +101,20 @@ const Index = () => {
       // Verified filter
       if (filters.verified && !property.isVerified) {
         return false;
+      }
+
+      // Serviced filter
+      if (filters.serviced !== 'any') {
+        const isServiced = property.isServiced ?? false;
+        if (filters.serviced === 'serviced' && !isServiced) return false;
+        if (filters.serviced === 'unserviced' && isServiced) return false;
+      }
+
+      // Furnished filter
+      if (filters.furnished !== 'any') {
+        const isFurnished = property.isFurnished ?? false;
+        if (filters.furnished === 'furnished' && !isFurnished) return false;
+        if (filters.furnished === 'unfurnished' && isFurnished) return false;
       }
 
       return true;

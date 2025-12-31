@@ -31,6 +31,8 @@ export interface Property {
   isVerified: boolean;
   isFeatured: boolean;
   createdAt: string;
+  isServiced?: boolean;
+  isFurnished?: boolean;
 }
 
 export const mockProperties: Property[] = [
@@ -71,6 +73,8 @@ export const mockProperties: Property[] = [
     isVerified: true,
     isFeatured: true,
     createdAt: '2024-01-15',
+    isServiced: true,
+    isFurnished: true,
   },
   {
     id: '2',
@@ -110,6 +114,8 @@ export const mockProperties: Property[] = [
     isVerified: true,
     isFeatured: true,
     createdAt: '2024-01-20',
+    isServiced: true,
+    isFurnished: true,
   },
   {
     id: '3',
@@ -148,6 +154,8 @@ export const mockProperties: Property[] = [
     isVerified: true,
     isFeatured: true,
     createdAt: '2024-01-18',
+    isServiced: true,
+    isFurnished: false,
   },
   {
     id: '4',
@@ -186,6 +194,8 @@ export const mockProperties: Property[] = [
     isVerified: true,
     isFeatured: false,
     createdAt: '2024-01-22',
+    isServiced: false,
+    isFurnished: false,
   },
   {
     id: '5',
@@ -224,6 +234,8 @@ export const mockProperties: Property[] = [
     isVerified: true,
     isFeatured: false,
     createdAt: '2024-01-25',
+    isServiced: false,
+    isFurnished: true,
   },
   {
     id: '6',
@@ -262,6 +274,8 @@ export const mockProperties: Property[] = [
     isVerified: true,
     isFeatured: true,
     createdAt: '2024-01-28',
+    isServiced: true,
+    isFurnished: true,
   },
   {
     id: '7',
@@ -300,6 +314,8 @@ export const mockProperties: Property[] = [
     isVerified: true,
     isFeatured: false,
     createdAt: '2024-01-30',
+    isServiced: false,
+    isFurnished: false,
   },
   {
     id: '8',
@@ -338,6 +354,8 @@ export const mockProperties: Property[] = [
     isVerified: true,
     isFeatured: true,
     createdAt: '2024-02-01',
+    isServiced: true,
+    isFurnished: false,
   },
 ];
 
