@@ -14,7 +14,220 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      agents: {
+        Row: {
+          company: string | null
+          created_at: string | null
+          email: string | null
+          id: number
+          name: string | null
+          phone: string | null
+          profile_url: string | null
+          raw_jsonb: Json | null
+          source: string
+          source_agent_id: string | null
+        }
+        Insert: {
+          company?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: number
+          name?: string | null
+          phone?: string | null
+          profile_url?: string | null
+          raw_jsonb?: Json | null
+          source: string
+          source_agent_id?: string | null
+        }
+        Update: {
+          company?: string | null
+          created_at?: string | null
+          email?: string | null
+          id?: number
+          name?: string | null
+          phone?: string | null
+          profile_url?: string | null
+          raw_jsonb?: Json | null
+          source?: string
+          source_agent_id?: string | null
+        }
+        Relationships: []
+      }
+      listing_features: {
+        Row: {
+          feature: string
+          id: number
+          listing_id: number | null
+        }
+        Insert: {
+          feature: string
+          id?: number
+          listing_id?: number | null
+        }
+        Update: {
+          feature?: string
+          id?: number
+          listing_id?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listing_features_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      listing_images: {
+        Row: {
+          id: number
+          image_url: string
+          listing_id: number | null
+          position: number | null
+        }
+        Insert: {
+          id?: number
+          image_url: string
+          listing_id?: number | null
+          position?: number | null
+        }
+        Update: {
+          id?: number
+          image_url?: string
+          listing_id?: number | null
+          position?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listing_images_listing_id_fkey"
+            columns: ["listing_id"]
+            isOneToOne: false
+            referencedRelation: "listings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      listings: {
+        Row: {
+          agent_id: number | null
+          bathrooms: number | null
+          bedrooms: number | null
+          created_at: string | null
+          currency: string | null
+          description: string | null
+          id: number
+          is_furnished: boolean | null
+          is_serviced: boolean | null
+          location_id: number | null
+          price: number | null
+          price_period: string | null
+          property_type: string | null
+          purpose: string | null
+          raw_jsonb: Json | null
+          scraped_at: string | null
+          size: number | null
+          size_unit: string | null
+          source: string
+          source_listing_id: string
+          title: string | null
+          toilets: number | null
+          updated_at: string | null
+          url: string | null
+        }
+        Insert: {
+          agent_id?: number | null
+          bathrooms?: number | null
+          bedrooms?: number | null
+          created_at?: string | null
+          currency?: string | null
+          description?: string | null
+          id?: number
+          is_furnished?: boolean | null
+          is_serviced?: boolean | null
+          location_id?: number | null
+          price?: number | null
+          price_period?: string | null
+          property_type?: string | null
+          purpose?: string | null
+          raw_jsonb?: Json | null
+          scraped_at?: string | null
+          size?: number | null
+          size_unit?: string | null
+          source: string
+          source_listing_id: string
+          title?: string | null
+          toilets?: number | null
+          updated_at?: string | null
+          url?: string | null
+        }
+        Update: {
+          agent_id?: number | null
+          bathrooms?: number | null
+          bedrooms?: number | null
+          created_at?: string | null
+          currency?: string | null
+          description?: string | null
+          id?: number
+          is_furnished?: boolean | null
+          is_serviced?: boolean | null
+          location_id?: number | null
+          price?: number | null
+          price_period?: string | null
+          property_type?: string | null
+          purpose?: string | null
+          raw_jsonb?: Json | null
+          scraped_at?: string | null
+          size?: number | null
+          size_unit?: string | null
+          source?: string
+          source_listing_id?: string
+          title?: string | null
+          toilets?: number | null
+          updated_at?: string | null
+          url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "listings_agent_id_fkey"
+            columns: ["agent_id"]
+            isOneToOne: false
+            referencedRelation: "agents"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "listings_location_id_fkey"
+            columns: ["location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      locations: {
+        Row: {
+          area: string | null
+          city: string | null
+          country: string | null
+          id: number
+          state: string | null
+        }
+        Insert: {
+          area?: string | null
+          city?: string | null
+          country?: string | null
+          id?: number
+          state?: string | null
+        }
+        Update: {
+          area?: string | null
+          city?: string | null
+          country?: string | null
+          id?: number
+          state?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
