@@ -31,41 +31,54 @@ export const PropertyCard = ({ property, index = 0 }: PropertyCardProps) => {
 
   // Calculate price comparison
   const priceInsight = useMemo(() => {
-    // Find similar properties in the same area with same type
-    const similarProperties = mockProperties.filter(p => 
-      p.location.area === property.location.area &&
-      p.type === property.type &&
-      p.propertyType === property.propertyType &&
-      p.id !== property.id
-    );
-    
-    // If not enough in same area, expand to city
-    let comparisonSet = similarProperties.length >= 1 
-      ? similarProperties 
-      : mockProperties.filter(p => 
-          p.location.city === property.location.city &&
-          p.type === property.type &&
-          p.propertyType === property.propertyType &&
-          p.id !== property.id
-        );
-    
-    // If still not enough, expand to same property type and listing type across all locations
-    if (comparisonSet.length === 0) {
-      comparisonSet = mockProperties.filter(p => 
+    // Find similar properties in the same area with same type + property type
+    const similarProperties = mockProperties.filter(
+      (p) =>
+        p.location.area === property.location.area &&
+        p.location.city === property.location.city &&
+        p.location.state === property.location.state &&
         p.type === property.type &&
         p.propertyType === property.propertyType &&
         p.id !== property.id
+    );
+
+    // Broaden progressively so every card gets an insight (even if we lack perfect comps)
+    let comparisonSet: Property[] =
+      similarProperties.length > 0
+        ? similarProperties
+        : mockProperties.filter(
+            (p) =>
+              p.location.city === property.location.city &&
+              p.location.state === property.location.state &&
+              p.type === property.type &&
+              p.propertyType === property.propertyType &&
+              p.id !== property.id
+          );
+
+    if (comparisonSet.length === 0) {
+      comparisonSet = mockProperties.filter(
+        (p) =>
+          p.location.state === property.location.state &&
+          p.type === property.type &&
+          p.propertyType === property.propertyType &&
+          p.id !== property.id
       );
     }
-    
+
+    if (comparisonSet.length === 0) {
+      // Last fallback: compare against all listings of the same listing type (rent vs sale)
+      comparisonSet = mockProperties.filter((p) => p.type === property.type && p.id !== property.id);
+    }
+
     if (comparisonSet.length === 0) return null;
-    
+
     // Calculate average price per sqm for comparison
-    const avgPricePerSqm = comparisonSet.reduce((sum, p) => sum + (p.price / p.size), 0) / comparisonSet.length;
+    const avgPricePerSqm =
+      comparisonSet.reduce((sum, p) => sum + p.price / p.size, 0) / comparisonSet.length;
     const propertyPricePerSqm = property.price / property.size;
-    
+
     const percentageDiff = ((propertyPricePerSqm - avgPricePerSqm) / avgPricePerSqm) * 100;
-    
+
     return {
       percentage: Math.abs(Math.round(percentageDiff)),
       isHigher: percentageDiff > 0,
@@ -111,18 +124,23 @@ export const PropertyCard = ({ property, index = 0 }: PropertyCardProps) => {
         </div>
 
         {/* Price Insight Badge */}
-        {priceInsight && !priceInsight.isEqual && (
+        {priceInsight && (
           <div className="absolute top-3 right-3 z-10">
             {priceInsight.isGreatDeal ? (
-              <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold rounded-md backdrop-blur-sm bg-emerald-500/90 text-white">
-                🔥 Great Deal
+              <span className="inline-flex items-center px-2 py-1 text-xs font-bold rounded-md backdrop-blur-sm bg-emerald-500/90 text-white">
+                Great Deal
+              </span>
+            ) : priceInsight.isEqual ? (
+              <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md backdrop-blur-sm bg-muted/90 text-foreground">
+                <Minus className="h-3 w-3" strokeWidth={2.5} />
+                Around avg
               </span>
             ) : (
-              <span className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md backdrop-blur-sm ${
-                priceInsight.isHigher 
-                  ? 'bg-amber-500/90 text-white'
-                  : 'bg-emerald-500/90 text-white'
-              }`}>
+              <span
+                className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md backdrop-blur-sm ${
+                  priceInsight.isHigher ? 'bg-amber-500/90 text-white' : 'bg-emerald-500/90 text-white'
+                }`}
+              >
                 {priceInsight.isHigher ? (
                   <TrendingUp className="h-3 w-3" strokeWidth={2.5} />
                 ) : (
