@@ -24,7 +24,7 @@ const Index = () => {
     state: '',
     city: '',
     locality: '',
-    listingType: 'all',
+    listingType: 'sale',
   });
   const [filters, setFilters] = useState<Filters>(defaultFilters);
 
@@ -57,8 +57,8 @@ const Index = () => {
         }
       }
 
-      // Listing type filter (rent/sale)
-      if (searchFilters.listingType !== 'all' && property.type !== searchFilters.listingType) {
+      // Listing type filter (rent/sale/shortlet)
+      if (property.type !== searchFilters.listingType) {
         return false;
       }
 

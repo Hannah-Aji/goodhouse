@@ -1,5 +1,6 @@
-import { SlidersHorizontal, ChevronDown, X } from 'lucide-react';
+import { SlidersHorizontal, ChevronDown, X, Home } from 'lucide-react';
 import { useState } from 'react';
+import { motion } from 'framer-motion';
 import {
   Popover,
   PopoverContent,
@@ -129,37 +130,88 @@ export const HeroSection = ({
   };
 
   return (
-    <section className="border-b border-border bg-background">
-      {/* Category Tabs with Blurred Logo Background */}
-      <div className="relative overflow-hidden">
-        {/* Blurred Background Logo */}
+    <section className="border-b border-border">
+      {/* Category Tabs with Dark Purple Background & Animated Logo */}
+      <div className="relative overflow-hidden bg-gradient-to-br from-purple-950 via-purple-900 to-black">
+        {/* Textured overlay for depth */}
+        <div className="absolute inset-0 opacity-30" style={{
+          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(139, 92, 246, 0.3) 1px, transparent 0)`,
+          backgroundSize: '20px 20px'
+        }} />
+        
+        {/* Animated Logo Background */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="relative">
-            {/* Purple glow effect */}
-            <div className="absolute inset-0 bg-gradient-to-br from-purple-600/30 via-purple-900/20 to-black/30 blur-3xl scale-150" />
+          <motion.div
+            animate={{
+              scale: [1, 1.05, 1],
+              opacity: [0.15, 0.25, 0.15],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+            className="relative"
+          >
+            {/* Glowing purple aura */}
+            <motion.div 
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.3, 0.5, 0.3],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut",
+                delay: 0.5
+              }}
+              className="absolute inset-0 bg-purple-500 blur-3xl rounded-full scale-150"
+            />
+            
+            {/* House icon */}
+            <motion.div
+              animate={{
+                y: [0, -5, 0],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="relative"
+            >
+              <Home className="w-24 h-24 md:w-32 md:h-32 text-purple-400/40 blur-[1px]" strokeWidth={1.5} />
+            </motion.div>
+            
             {/* Logo text */}
-            <div className="relative text-6xl md:text-8xl font-black tracking-tighter select-none blur-[2px] opacity-[0.08]">
-              <span className="bg-gradient-to-br from-purple-500 via-purple-800 to-black bg-clip-text text-transparent">
-                GOOD
+            <motion.div 
+              animate={{
+                opacity: [0.3, 0.5, 0.3],
+              }}
+              transition={{
+                duration: 4,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="text-center mt-2"
+            >
+              <span className="text-2xl md:text-3xl font-black tracking-tight text-purple-400/30 blur-[0.5px]">
+                GOOD HOUSE
               </span>
-              <br />
-              <span className="bg-gradient-to-br from-purple-400 via-purple-700 to-black bg-clip-text text-transparent">
-                HOUSE
-              </span>
-            </div>
-          </div>
+            </motion.div>
+          </motion.div>
         </div>
         
-        <div className="container py-5 relative z-10">
-          <div className="flex items-center justify-center gap-10 overflow-x-auto pb-1">
+        <div className="container py-6 relative z-10">
+          <div className="flex items-center justify-center gap-12 overflow-x-auto pb-1">
             {categories.map((category) => (
               <button
                 key={category.id}
                 onClick={() => onCategoryChange?.(category.id)}
                 className={`flex flex-col items-center gap-2 min-w-[64px] pb-3 border-b-2 transition-all ${
                   activeCategory === category.id
-                    ? 'border-foreground text-foreground'
-                    : 'border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30'
+                    ? 'border-purple-400 text-white'
+                    : 'border-transparent text-purple-200/70 hover:text-white hover:border-purple-400/50'
                 }`}
               >
                 <span className="text-2xl">{category.icon}</span>
