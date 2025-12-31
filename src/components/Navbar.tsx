@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Search, Menu } from 'lucide-react';
+import { Search, Menu, X } from 'lucide-react';
 import { useState } from 'react';
 import {
   Select,
@@ -8,7 +8,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -17,10 +16,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { nigerianStates, formatPrice } from '@/data/properties';
+import { nigerianStates } from '@/data/properties';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useToast } from '@/hooks/use-toast';
 
 const priceOptions = [
-  { value: '', label: 'Any' },
+  { value: 'any', label: 'Any' },
   { value: '500000', label: '₦500K' },
   { value: '1000000', label: '₦1M' },
   { value: '2000000', label: '₦2M' },
@@ -51,11 +52,54 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
   const [listingType, setListingType] = useState<'all' | 'rent' | 'sale'>(searchFilters?.listingType || 'all');
   const [minPrice, setMinPrice] = useState(searchFilters?.minPrice || '');
   const [maxPrice, setMaxPrice] = useState(searchFilters?.maxPrice || '');
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const { toast } = useToast();
 
-  const handleSearch = () => {
+  const validateAndSearch = () => {
+    // Validation
+    if (!location || location === '') {
+      toast({
+        title: "Please select a location",
+        description: "Choose where you want to search for properties",
+        variant: "destructive",
+      });
+      return false;
+    }
+    if (!listingType || listingType === 'all') {
+      toast({
+        title: "Please select listing type",
+        description: "Choose whether you want to rent or buy",
+        variant: "destructive",
+      });
+      return false;
+    }
+    if (!minPrice || minPrice === '' || minPrice === 'any') {
+      toast({
+        title: "Please select minimum price",
+        description: "Set your minimum budget",
+        variant: "destructive",
+      });
+      return false;
+    }
+    if (!maxPrice || maxPrice === '' || maxPrice === 'any') {
+      toast({
+        title: "Please select maximum price",
+        description: "Set your maximum budget",
+        variant: "destructive",
+      });
+      return false;
+    }
+
+    // If validation passes
     const minVal = minPrice === 'any' ? '' : minPrice;
     const maxVal = maxPrice === 'any' ? '' : maxPrice;
     onSearch?.({ location, listingType, minPrice: minVal, maxPrice: maxVal });
+    setIsSearchOpen(false); // Close the dropdown
+    return true;
+  };
+
+  const handleDesktopSearch = () => {
+    validateAndSearch();
   };
 
   return (
@@ -113,7 +157,7 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
                 </SelectTrigger>
                 <SelectContent className="bg-background z-50">
                   {priceOptions.map((option) => (
-                    <SelectItem key={`min-${option.value}`} value={option.value || 'any'}>
+                    <SelectItem key={`min-${option.value}`} value={option.value}>
                       {option.label}
                     </SelectItem>
                   ))}
@@ -131,7 +175,7 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
                 </SelectTrigger>
                 <SelectContent className="bg-background z-50">
                   {priceOptions.map((option) => (
-                    <SelectItem key={`max-${option.value}`} value={option.value || 'any'}>
+                    <SelectItem key={`max-${option.value}`} value={option.value}>
                       {option.label}
                     </SelectItem>
                   ))}
@@ -143,7 +187,7 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
             <Button 
               size="icon" 
               className="rounded-full h-9 w-9 shrink-0"
-              onClick={handleSearch}
+              onClick={handleDesktopSearch}
             >
               <Search className="h-4 w-4" />
             </Button>
@@ -151,78 +195,16 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
         </div>
 
         {/* Mobile Search Button */}
-        <Sheet>
-          <SheetTrigger asChild>
-            <button className="lg:hidden flex items-center gap-3 flex-1 mx-2 rounded-full border border-border px-4 py-2.5 shadow-sm">
-              <Search className="h-5 w-5 text-muted-foreground" />
-              <div className="text-left">
-                <p className="text-sm font-medium">Search</p>
-                <p className="text-xs text-muted-foreground">Location · Type · Price</p>
-              </div>
-            </button>
-          </SheetTrigger>
-          <SheetContent side="top" className="h-auto">
-            <SheetHeader>
-              <SheetTitle>Search Properties</SheetTitle>
-            </SheetHeader>
-            <div className="flex flex-col gap-4 mt-4">
-              <Select value={location} onValueChange={setLocation}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Select Location" />
-                </SelectTrigger>
-                <SelectContent className="bg-background z-50">
-                  <SelectItem value="all">All Locations</SelectItem>
-                  {nigerianStates.map((state) => (
-                    <SelectItem key={state} value={state.toLowerCase()}>{state}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              
-              <Select value={listingType} onValueChange={(v) => setListingType(v as 'all' | 'rent' | 'sale')}>
-                <SelectTrigger>
-                  <SelectValue placeholder="Rent or Sale" />
-                </SelectTrigger>
-                <SelectContent className="bg-background z-50">
-                  <SelectItem value="all">All</SelectItem>
-                  <SelectItem value="rent">For Rent</SelectItem>
-                  <SelectItem value="sale">For Sale</SelectItem>
-                </SelectContent>
-              </Select>
-              
-              <div className="flex gap-2">
-                <Select value={minPrice} onValueChange={setMinPrice}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Min Price" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-background z-50">
-                    {priceOptions.map((option) => (
-                      <SelectItem key={`mob-min-${option.value}`} value={option.value || 'any'}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <Select value={maxPrice} onValueChange={setMaxPrice}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="Max Price" />
-                  </SelectTrigger>
-                  <SelectContent className="bg-background z-50">
-                    {priceOptions.map((option) => (
-                      <SelectItem key={`mob-max-${option.value}`} value={option.value || 'any'}>
-                        {option.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
-              
-              <Button onClick={handleSearch} className="w-full">
-                <Search className="h-4 w-4 mr-2" />
-                Search
-              </Button>
-            </div>
-          </SheetContent>
-        </Sheet>
+        <button 
+          className="lg:hidden flex items-center gap-3 flex-1 mx-2 rounded-full border border-border px-4 py-2.5 shadow-sm"
+          onClick={() => setIsSearchOpen(true)}
+        >
+          <Search className="h-5 w-5 text-muted-foreground" />
+          <div className="text-left">
+            <p className="text-sm font-medium">Search</p>
+            <p className="text-xs text-muted-foreground">Location · Type · Price</p>
+          </div>
+        </button>
 
         {/* Menu Icon */}
         <Sheet>
@@ -252,6 +234,126 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
           </SheetContent>
         </Sheet>
       </div>
+
+      {/* Mobile Search Dropdown with Animation */}
+      <AnimatePresence>
+        {isSearchOpen && (
+          <>
+            {/* Backdrop */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="fixed inset-0 bg-foreground/20 backdrop-blur-sm z-40 lg:hidden"
+              onClick={() => setIsSearchOpen(false)}
+            />
+            
+            {/* Search Panel */}
+            <motion.div
+              initial={{ y: '-100%', opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: '-100%', opacity: 0 }}
+              transition={{ 
+                type: 'spring', 
+                damping: 25, 
+                stiffness: 300,
+                duration: 0.3 
+              }}
+              className="fixed top-0 left-0 right-0 bg-background z-50 shadow-xl rounded-b-2xl lg:hidden"
+            >
+              <div className="p-6">
+                {/* Header */}
+                <div className="flex items-center justify-between mb-6">
+                  <h2 className="text-lg font-semibold">Search Properties</h2>
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="rounded-full"
+                    onClick={() => setIsSearchOpen(false)}
+                  >
+                    <X className="h-5 w-5" />
+                  </Button>
+                </div>
+                
+                {/* Search Fields */}
+                <div className="flex flex-col gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground">Location</label>
+                    <Select value={location} onValueChange={setLocation}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Select Location" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-background z-[60]">
+                        <SelectItem value="all">All Locations</SelectItem>
+                        {nigerianStates.map((state) => (
+                          <SelectItem key={state} value={state.toLowerCase()}>{state}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground">Type</label>
+                    <Select value={listingType} onValueChange={(v) => setListingType(v as 'all' | 'rent' | 'sale')}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder="Rent or Sale" />
+                      </SelectTrigger>
+                      <SelectContent className="bg-background z-[60]">
+                        <SelectItem value="all">All</SelectItem>
+                        <SelectItem value="rent">For Rent</SelectItem>
+                        <SelectItem value="sale">For Sale</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-muted-foreground">Min Price</label>
+                      <Select value={minPrice} onValueChange={setMinPrice}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Min ₦" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-background z-[60]">
+                          {priceOptions.map((option) => (
+                            <SelectItem key={`mob-min-${option.value}`} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium text-muted-foreground">Max Price</label>
+                      <Select value={maxPrice} onValueChange={setMaxPrice}>
+                        <SelectTrigger className="w-full">
+                          <SelectValue placeholder="Max ₦" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-background z-[60]">
+                          {priceOptions.map((option) => (
+                            <SelectItem key={`mob-max-${option.value}`} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  
+                  <Button 
+                    onClick={validateAndSearch} 
+                    className="w-full mt-2"
+                    size="lg"
+                  >
+                    <Search className="h-4 w-4 mr-2" />
+                    Search Properties
+                  </Button>
+                </div>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </header>
   );
 };
