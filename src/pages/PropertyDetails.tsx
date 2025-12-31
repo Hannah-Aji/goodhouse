@@ -486,18 +486,10 @@ const PropertyDetails = () => {
                 
                 {/* Serviced & Furnished Pills - Below Description */}
                 <div className="flex flex-wrap gap-2 pt-2">
-                  <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${
-                    property.isServiced 
-                      ? 'bg-neutral-700 text-neutral-100' 
-                      : 'bg-neutral-200 text-neutral-600 dark:bg-neutral-700 dark:text-neutral-300'
-                  }`}>
+                  <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
                     {property.isServiced ? 'Serviced' : 'Unserviced'}
                   </span>
-                  <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${
-                    property.isFurnished 
-                      ? 'bg-neutral-700 text-neutral-100' 
-                      : 'bg-neutral-200 text-neutral-600 dark:bg-neutral-700 dark:text-neutral-300'
-                  }`}>
+                  <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-neutral-100 text-neutral-700 dark:bg-neutral-800 dark:text-neutral-200">
                     {property.isFurnished ? 'Furnished' : 'Unfurnished'}
                   </span>
                 </div>
