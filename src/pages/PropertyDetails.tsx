@@ -420,33 +420,27 @@ const PropertyDetails = () => {
               <div className="space-y-4">
                 <h2 className="text-xl font-semibold">About this property</h2>
                 
-                {/* Serviced & Furnished Pills */}
-                <div className="flex flex-wrap gap-2">
-                  {property.isServiced && (
-                    <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-primary/10 text-primary">
-                      Serviced
-                    </span>
-                  )}
-                  {property.isFurnished && (
-                    <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-primary/10 text-primary">
-                      Furnished
-                    </span>
-                  )}
-                  {!property.isServiced && (
-                    <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-muted text-muted-foreground">
-                      Unserviced
-                    </span>
-                  )}
-                  {!property.isFurnished && (
-                    <span className="inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium bg-muted text-muted-foreground">
-                      Unfurnished
-                    </span>
-                  )}
-                </div>
-                
                 <p className="text-muted-foreground leading-relaxed">
                   {property.description}
                 </p>
+                
+                {/* Serviced & Furnished Pills - Below Description */}
+                <div className="flex flex-wrap gap-2 pt-2">
+                  <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${
+                    property.isServiced 
+                      ? 'bg-neutral-700 text-neutral-100' 
+                      : 'bg-neutral-200 text-neutral-600 dark:bg-neutral-700 dark:text-neutral-300'
+                  }`}>
+                    {property.isServiced ? 'Serviced' : 'Unserviced'}
+                  </span>
+                  <span className={`inline-flex items-center px-3 py-1.5 rounded-full text-sm font-medium ${
+                    property.isFurnished 
+                      ? 'bg-neutral-700 text-neutral-100' 
+                      : 'bg-neutral-200 text-neutral-600 dark:bg-neutral-700 dark:text-neutral-300'
+                  }`}>
+                    {property.isFurnished ? 'Furnished' : 'Unfurnished'}
+                  </span>
+                </div>
               </div>
 
               {/* Features */}
@@ -559,8 +553,13 @@ const PropertyDetails = () => {
                       <span className="font-bold text-lg text-foreground">{formatPriceFull(property.price)}</span>
                     </div>
                     
+                    {/* No Hidden Fees */}
+                    <div className="pt-4 text-center">
+                      <p className="text-sm font-semibold text-emerald-600 dark:text-emerald-400">No Hidden Fees!</p>
+                    </div>
+                    
                     {/* Receipt footer decoration */}
-                    <div className="pt-4 text-center text-xs text-muted-foreground">
+                    <div className="pt-2 text-center text-xs text-muted-foreground">
                       <p>Thank you for viewing!</p>
                       <p className="mt-1">Ref: #{property.id.padStart(6, '0')}</p>
                     </div>
