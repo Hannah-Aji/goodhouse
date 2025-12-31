@@ -1,7 +1,7 @@
-import { Property, formatPrice } from '@/data/properties';
-import { Star } from 'lucide-react';
+import { Property, formatPrice, mockProperties } from '@/data/properties';
+import { Star, TrendingDown, TrendingUp, Minus } from 'lucide-react';
 import { motion } from 'framer-motion';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import useEmblaCarousel from 'embla-carousel-react';
 
@@ -28,6 +28,41 @@ export const PropertyCard = ({ property, index = 0 }: PropertyCardProps) => {
       emblaApi.off('select', onSelect);
     };
   }, [emblaApi, onSelect]);
+
+  // Calculate price comparison
+  const priceInsight = useMemo(() => {
+    // Find similar properties in the same area with same type
+    const similarProperties = mockProperties.filter(p => 
+      p.location.area === property.location.area &&
+      p.type === property.type &&
+      p.propertyType === property.propertyType &&
+      p.id !== property.id
+    );
+    
+    // If not enough in same area, expand to city
+    const comparisonSet = similarProperties.length >= 2 
+      ? similarProperties 
+      : mockProperties.filter(p => 
+          p.location.city === property.location.city &&
+          p.type === property.type &&
+          p.propertyType === property.propertyType &&
+          p.id !== property.id
+        );
+    
+    if (comparisonSet.length === 0) return null;
+    
+    // Calculate average price per sqm for comparison
+    const avgPricePerSqm = comparisonSet.reduce((sum, p) => sum + (p.price / p.size), 0) / comparisonSet.length;
+    const propertyPricePerSqm = property.price / property.size;
+    
+    const percentageDiff = ((propertyPricePerSqm - avgPricePerSqm) / avgPricePerSqm) * 100;
+    
+    return {
+      percentage: Math.abs(Math.round(percentageDiff)),
+      isHigher: percentageDiff > 0,
+      isEqual: Math.abs(percentageDiff) < 5,
+    };
+  }, [property]);
 
   const images = property.images.length > 0 ? property.images : [property.image];
 
@@ -64,6 +99,24 @@ export const PropertyCard = ({ property, index = 0 }: PropertyCardProps) => {
             For {property.type === 'sale' ? 'Sale' : 'Rent'}
           </span>
         </div>
+
+        {/* Price Insight Badge */}
+        {priceInsight && !priceInsight.isEqual && (
+          <div className="absolute top-3 right-3 z-10">
+            <span className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md backdrop-blur-sm ${
+              priceInsight.isHigher 
+                ? 'bg-amber-500/90 text-white'
+                : 'bg-emerald-500/90 text-white'
+            }`}>
+              {priceInsight.isHigher ? (
+                <TrendingUp className="h-3 w-3" />
+              ) : (
+                <TrendingDown className="h-3 w-3" />
+              )}
+              {priceInsight.percentage}% {priceInsight.isHigher ? 'above' : 'below'}
+            </span>
+          </div>
+        )}
 
         {/* Carousel Dots */}
         {images.length > 1 && (
