@@ -347,7 +347,39 @@ const PropertyDetails = () => {
                       </div>
                     </DialogContent>
                   </Dialog>
-                  <Button variant="outline" size="icon">
+                  <Button 
+                    variant="outline" 
+                    size="icon"
+                    onClick={async () => {
+                      const shareUrl = window.location.href;
+                      const shareData = {
+                        title: property.title,
+                        text: `Check out this property: ${property.title} - ${formatPriceFull(property.price)}`,
+                        url: shareUrl,
+                      };
+                      
+                      try {
+                        if (navigator.share && navigator.canShare(shareData)) {
+                          await navigator.share(shareData);
+                        } else {
+                          await navigator.clipboard.writeText(shareUrl);
+                          toast({
+                            title: "Link copied!",
+                            description: "Property link has been copied to clipboard",
+                          });
+                        }
+                      } catch (error) {
+                        // User cancelled or error - try clipboard fallback
+                        if ((error as Error).name !== 'AbortError') {
+                          await navigator.clipboard.writeText(shareUrl);
+                          toast({
+                            title: "Link copied!",
+                            description: "Property link has been copied to clipboard",
+                          });
+                        }
+                      }
+                    }}
+                  >
                     <Share className="h-5 w-5" />
                   </Button>
                 </div>
