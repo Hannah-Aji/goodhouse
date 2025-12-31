@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Search, Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Select,
   SelectContent,
@@ -16,7 +16,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { nigerianStates } from '@/data/properties';
+import { getStates, getCities, getLocalities } from '@/data/nigerianLocations';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
 
@@ -35,8 +35,10 @@ const priceOptions = [
   { value: '1000000000', label: '₦1B' },
 ];
 
-interface SearchFilters {
-  location: string;
+export interface SearchFilters {
+  state: string;
+  city: string;
+  locality: string;
   listingType: 'all' | 'rent' | 'sale';
   minPrice: string;
   maxPrice: string;
@@ -48,7 +50,9 @@ interface NavbarProps {
 }
 
 export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
-  const [location, setLocation] = useState(searchFilters?.location || '');
+  const [state, setState] = useState(searchFilters?.state || '');
+  const [city, setCity] = useState(searchFilters?.city || '');
+  const [locality, setLocality] = useState(searchFilters?.locality || '');
   const [listingType, setListingType] = useState<'all' | 'rent' | 'sale'>(searchFilters?.listingType || 'all');
   const [minPrice, setMinPrice] = useState(searchFilters?.minPrice || '');
   const [maxPrice, setMaxPrice] = useState(searchFilters?.maxPrice || '');
@@ -56,18 +60,30 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
   const { toast } = useToast();
 
+  // Get available options based on selections
+  const states = getStates();
+  const cities = getCities(state);
+  const localities = getLocalities(state, city);
+
+  // Reset dependent fields when parent changes
+  useEffect(() => {
+    setCity('');
+    setLocality('');
+  }, [state]);
+
+  useEffect(() => {
+    setLocality('');
+  }, [city]);
+
   const validateAndSearch = async () => {
-    // All fields are valid including "all" and "any" options
     const minVal = minPrice === 'any' ? '' : minPrice;
     const maxVal = maxPrice === 'any' ? '' : maxPrice;
     
-    // Trigger the rubber band animation
     setIsAnimatingOut(true);
     
-    // Wait for animation then close
     await new Promise(resolve => setTimeout(resolve, 400));
     
-    onSearch?.({ location: location || 'all', listingType, minPrice: minVal, maxPrice: maxVal });
+    onSearch?.({ state: state || 'all', city: city || 'all', locality: locality || 'all', listingType, minPrice: minVal, maxPrice: maxVal });
     setIsSearchOpen(false);
     setIsAnimatingOut(false);
     return true;
@@ -76,7 +92,7 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
   const handleDesktopSearch = () => {
     const minVal = minPrice === 'any' ? '' : minPrice;
     const maxVal = maxPrice === 'any' ? '' : maxPrice;
-    onSearch?.({ location: location || 'all', listingType, minPrice: minVal, maxPrice: maxVal });
+    onSearch?.({ state: state || 'all', city: city || 'all', locality: locality || 'all', listingType, minPrice: minVal, maxPrice: maxVal });
   };
 
   return (
@@ -91,18 +107,52 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
         </Link>
 
         {/* Center Search - Desktop */}
-        <div className="hidden lg:flex flex-1 justify-center max-w-3xl">
+        <div className="hidden lg:flex flex-1 justify-center max-w-4xl">
           <div className="flex items-center gap-1 rounded-full border border-border px-2 py-1.5 shadow-sm bg-background">
-            {/* Location */}
+            {/* State */}
             <div className="px-3">
-              <Select value={location} onValueChange={setLocation}>
-                <SelectTrigger className="border-0 shadow-none h-auto p-0 min-w-[100px] focus:ring-0">
-                  <SelectValue placeholder="Where" />
+              <Select value={state} onValueChange={setState}>
+                <SelectTrigger className="border-0 shadow-none h-auto p-0 min-w-[80px] focus:ring-0">
+                  <SelectValue placeholder="State" />
                 </SelectTrigger>
                 <SelectContent className="bg-background z-50">
-                  <SelectItem value="all">All Locations</SelectItem>
-                  {nigerianStates.map((state) => (
-                    <SelectItem key={state} value={state.toLowerCase()}>{state}</SelectItem>
+                  <SelectItem value="all">All States</SelectItem>
+                  {states.map((s) => (
+                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <span className="h-6 w-px bg-border" />
+            
+            {/* City */}
+            <div className="px-3">
+              <Select value={city} onValueChange={setCity} disabled={!state || state === 'all'}>
+                <SelectTrigger className="border-0 shadow-none h-auto p-0 min-w-[80px] focus:ring-0">
+                  <SelectValue placeholder="City" />
+                </SelectTrigger>
+                <SelectContent className="bg-background z-50">
+                  <SelectItem value="all">All Cities</SelectItem>
+                  {cities.map((c) => (
+                    <SelectItem key={c} value={c}>{c}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <span className="h-6 w-px bg-border" />
+            
+            {/* Locality */}
+            <div className="px-3">
+              <Select value={locality} onValueChange={setLocality} disabled={!city || city === 'all'}>
+                <SelectTrigger className="border-0 shadow-none h-auto p-0 min-w-[90px] focus:ring-0">
+                  <SelectValue placeholder="Locality" />
+                </SelectTrigger>
+                <SelectContent className="bg-background z-50">
+                  <SelectItem value="all">All Areas</SelectItem>
+                  {localities.map((l) => (
+                    <SelectItem key={l} value={l}>{l}</SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -113,7 +163,7 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
             {/* Rent/Sale */}
             <div className="px-3">
               <Select value={listingType} onValueChange={(v) => setListingType(v as 'all' | 'rent' | 'sale')}>
-                <SelectTrigger className="border-0 shadow-none h-auto p-0 min-w-[80px] focus:ring-0">
+                <SelectTrigger className="border-0 shadow-none h-auto p-0 min-w-[70px] focus:ring-0">
                   <SelectValue placeholder="Type" />
                 </SelectTrigger>
                 <SelectContent className="bg-background z-50">
@@ -127,9 +177,9 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
             <span className="h-6 w-px bg-border" />
             
             {/* Min Price */}
-            <div className="px-3">
+            <div className="px-2">
               <Select value={minPrice} onValueChange={setMinPrice}>
-                <SelectTrigger className="border-0 shadow-none h-auto p-0 min-w-[70px] focus:ring-0">
+                <SelectTrigger className="border-0 shadow-none h-auto p-0 min-w-[60px] focus:ring-0">
                   <SelectValue placeholder="Min ₦" />
                 </SelectTrigger>
                 <SelectContent className="bg-background z-50">
@@ -145,9 +195,9 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
             <span className="h-6 w-px bg-border" />
             
             {/* Max Price */}
-            <div className="px-3">
+            <div className="px-2">
               <Select value={maxPrice} onValueChange={setMaxPrice}>
-                <SelectTrigger className="border-0 shadow-none h-auto p-0 min-w-[70px] focus:ring-0">
+                <SelectTrigger className="border-0 shadow-none h-auto p-0 min-w-[60px] focus:ring-0">
                   <SelectValue placeholder="Max ₦" />
                 </SelectTrigger>
                 <SelectContent className="bg-background z-50">
@@ -178,8 +228,8 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
         >
           <Search className="h-5 w-5 text-muted-foreground" />
           <div className="text-left">
-            <p className="text-sm font-medium">Search</p>
-            <p className="text-xs text-muted-foreground">Location · Type · Price</p>
+            <p className="text-sm font-medium">Find your next home</p>
+            <p className="text-xs text-muted-foreground">State · City · Locality</p>
           </div>
         </button>
 
@@ -248,7 +298,7 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
               <div className="p-6">
                 {/* Header */}
                 <div className="flex items-center justify-between mb-6">
-                  <h2 className="text-lg font-semibold">Search Properties</h2>
+                  <h2 className="text-lg font-semibold">Find your next home</h2>
                   <Button 
                     variant="ghost" 
                     size="icon" 
@@ -262,15 +312,45 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
                 {/* Search Fields */}
                 <div className="flex flex-col gap-4">
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-muted-foreground">Location</label>
-                    <Select value={location} onValueChange={setLocation}>
+                    <label className="text-sm font-medium text-muted-foreground">State</label>
+                    <Select value={state} onValueChange={setState}>
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Select Location" />
+                        <SelectValue placeholder="Select State" />
                       </SelectTrigger>
                       <SelectContent className="bg-background z-[60]">
-                        <SelectItem value="all">All Locations</SelectItem>
-                        {nigerianStates.map((state) => (
-                          <SelectItem key={state} value={state.toLowerCase()}>{state}</SelectItem>
+                        <SelectItem value="all">All States</SelectItem>
+                        {states.map((s) => (
+                          <SelectItem key={s} value={s}>{s}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground">City</label>
+                    <Select value={city} onValueChange={setCity} disabled={!state || state === 'all'}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder={state && state !== 'all' ? "Select City" : "Select state first"} />
+                      </SelectTrigger>
+                      <SelectContent className="bg-background z-[60]">
+                        <SelectItem value="all">All Cities</SelectItem>
+                        {cities.map((c) => (
+                          <SelectItem key={c} value={c}>{c}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium text-muted-foreground">Locality</label>
+                    <Select value={locality} onValueChange={setLocality} disabled={!city || city === 'all'}>
+                      <SelectTrigger className="w-full">
+                        <SelectValue placeholder={city && city !== 'all' ? "Select Locality" : "Select city first"} />
+                      </SelectTrigger>
+                      <SelectContent className="bg-background z-[60]">
+                        <SelectItem value="all">All Areas</SelectItem>
+                        {localities.map((l) => (
+                          <SelectItem key={l} value={l}>{l}</SelectItem>
                         ))}
                       </SelectContent>
                     </Select>

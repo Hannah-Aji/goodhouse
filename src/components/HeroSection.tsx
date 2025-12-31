@@ -13,6 +13,7 @@ const categories = [
   { id: 'all', label: 'All', icon: '🏠' },
   { id: 'house', label: 'Houses', icon: '🏡' },
   { id: 'apartment', label: 'Apartments', icon: '🏢' },
+  { id: 'shortlet', label: 'Shortlets', icon: '🏨' },
 ];
 
 const bedroomOptions = ['Any', '1', '2', '3', '4', '5+'];
@@ -213,22 +214,6 @@ export const HeroSection = ({
                 </div>
               </PopoverContent>
             </Popover>
-
-            {/* Verified Only Toggle */}
-            <button
-              onClick={() => {
-                const newVerified = !localFilters.verified;
-                updateFilter('verified', newVerified);
-                onFiltersChange?.({ ...localFilters, verified: newVerified });
-              }}
-              className={`hidden md:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border transition-colors text-sm font-medium whitespace-nowrap ${
-                localFilters.verified
-                  ? 'border-primary bg-primary/10 text-primary'
-                  : 'border-border bg-background hover:border-foreground/30'
-              }`}
-            >
-              ✓ Verified
-            </button>
           </div>
 
           {/* All Filters Button */}
@@ -314,18 +299,6 @@ export const HeroSection = ({
                       </button>
                     ))}
                   </div>
-                </div>
-
-                {/* Verified Checkbox */}
-                <div className="flex items-center gap-2">
-                  <Checkbox 
-                    id="verified"
-                    checked={localFilters.verified}
-                    onCheckedChange={(checked) => updateFilter('verified', !!checked)}
-                  />
-                  <label htmlFor="verified" className="text-sm">
-                    Show only verified listings
-                  </label>
                 </div>
 
                 {/* Apply Button */}
