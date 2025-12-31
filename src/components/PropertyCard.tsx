@@ -100,19 +100,29 @@ export const PropertyCard = ({ property, index = 0 }: PropertyCardProps) => {
       <div className="relative aspect-square overflow-hidden rounded-xl mb-3">
         <div ref={emblaRef} className="overflow-hidden h-full">
           <div className="flex h-full">
-            {images.map((image, imgIndex) => (
-              <div key={imgIndex} className="flex-[0_0_100%] min-w-0 h-full relative">
-                <div className={`absolute inset-0 bg-muted ${imageLoaded && imgIndex === 0 ? 'hidden' : ''}`} />
-                <Link to={`/property/${property.id}`}>
-                  <img
-                    src={image}
-                    alt={`${property.title} ${imgIndex + 1}`}
-                    className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    onLoad={() => imgIndex === 0 && setImageLoaded(true)}
-                  />
-                </Link>
-              </div>
-            ))}
+            {images.map((image, imgIndex) => {
+              const [loaded, setLoaded] = useState(false);
+              return (
+                <div key={imgIndex} className="flex-[0_0_100%] min-w-0 h-full relative">
+                  {!loaded && (
+                    <div className="absolute inset-0 bg-muted flex items-center justify-center">
+                      <div className="w-6 h-6 border-2 border-muted-foreground/30 border-t-muted-foreground rounded-full animate-spin" />
+                    </div>
+                  )}
+                  <Link to={`/property/${property.id}`}>
+                    <img
+                      src={image}
+                      alt={`${property.title} ${imgIndex + 1}`}
+                      className={`w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 ${!loaded ? 'opacity-0' : 'opacity-100'}`}
+                      onLoad={() => {
+                        setLoaded(true);
+                        if (imgIndex === 0) setImageLoaded(true);
+                      }}
+                    />
+                  </Link>
+                </div>
+              );
+            })}
           </div>
         </div>
 
