@@ -9,18 +9,17 @@ export const Navbar = () => {
 
   return (
     <header className="sticky top-0 z-50 w-full bg-background border-b border-border">
-      <div className="container flex h-20 items-center justify-between">
+      <div className="container flex h-20 items-center">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2">
-          <svg viewBox="0 0 32 32" className="h-8 w-8 text-primary" fill="currentColor">
-            <path d="M16 1C7.729 1 1 7.729 1 16s6.729 15 15 15 15-6.729 15-15S24.271 1 16 1zm0 28c-7.18 0-13-5.82-13-13S8.82 3 16 3s13 5.82 13 13-5.82 13-13 13z"/>
-            <path d="M23 12h-6V6a1 1 0 00-2 0v6H9a1 1 0 000 2h6v6a1 1 0 002 0v-6h6a1 1 0 000-2z"/>
-          </svg>
-          <span className="text-xl font-bold text-primary">propnaija</span>
+        <Link to="/" className="flex items-center gap-2 shrink-0">
+          <div className="flex flex-col leading-none">
+            <span className="text-xs font-medium text-muted-foreground tracking-wider uppercase">good</span>
+            <span className="text-xl font-bold text-foreground -mt-0.5">houses</span>
+          </div>
         </Link>
 
-        {/* Center Search - Desktop */}
-        <div className="hidden md:flex items-center">
+        {/* Center Search - Desktop (truly centered) */}
+        <div className="hidden md:flex flex-1 justify-center">
           <button className="flex items-center gap-4 rounded-full border border-border px-4 py-2 shadow-sm hover:shadow-md transition-shadow">
             <span className="text-sm font-medium">Anywhere</span>
             <span className="h-6 w-px bg-border" />
@@ -34,7 +33,7 @@ export const Navbar = () => {
         </div>
 
         {/* Right Section */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 ml-auto shrink-0">
           <Button variant="ghost" className="hidden md:flex text-sm font-medium rounded-full">
             List your property
           </Button>
