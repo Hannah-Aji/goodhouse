@@ -1,14 +1,10 @@
-import { Search, MapPin } from 'lucide-react';
+import { Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { motion } from 'framer-motion';
-import { useState } from 'react';
 
 const categories = [
   { id: 'all', label: 'All', icon: '🏠' },
   { id: 'house', label: 'Houses', icon: '🏡' },
   { id: 'apartment', label: 'Apartments', icon: '🏢' },
-  { id: 'land', label: 'Land', icon: '🌳' },
-  { id: 'commercial', label: 'Commercial', icon: '🏪' },
 ];
 
 interface HeroSectionProps {
@@ -17,8 +13,6 @@ interface HeroSectionProps {
 }
 
 export const HeroSection = ({ onCategoryChange, activeCategory = 'all' }: HeroSectionProps) => {
-  const [searchLocation, setSearchLocation] = useState('');
-
   return (
     <section className="border-b border-border">
       {/* Category Tabs */}

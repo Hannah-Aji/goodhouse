@@ -1,7 +1,5 @@
 import { mockProperties, Property } from '@/data/properties';
 import { PropertyCard } from './PropertyCard';
-import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
 
 interface FeaturedPropertiesProps {
