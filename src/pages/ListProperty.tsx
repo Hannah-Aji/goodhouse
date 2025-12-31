@@ -25,27 +25,74 @@ const featuresList = [
   'CCTV', 'Electric Fence', 'Water Supply', 'Prepaid Meter'
 ];
 
+// Nigerian phone regex: starts with 0 or +234, followed by valid prefixes
+const nigerianPhoneRegex = /^(\+234|0)[789][01]\d{8}$/;
+
 const propertySchema = z.object({
-  title: z.string().min(10, 'Title must be at least 10 characters').max(100, 'Title must be less than 100 characters'),
-  propertyType: z.enum(['house', 'apartment', 'shortlet'], { required_error: 'Please select a property type' }),
-  listingType: z.enum(['rent', 'sale', 'shortlet'], { required_error: 'Please select listing type' }),
-  price: z.number().min(1000, 'Price must be at least ₦1,000'),
+  title: z.string()
+    .trim()
+    .min(10, 'Title must be at least 10 characters')
+    .max(100, 'Title must be less than 100 characters')
+    .regex(/^[a-zA-Z0-9\s,.\-']+$/, 'Title contains invalid characters'),
+  propertyType: z.enum(['house', 'apartment', 'shortlet'], { 
+    required_error: 'Please select a property type' 
+  }),
+  listingType: z.enum(['rent', 'sale', 'shortlet'], { 
+    required_error: 'Please select listing type' 
+  }),
+  price: z.number()
+    .min(1000, 'Price must be at least ₦1,000')
+    .max(100000000000, 'Price seems too high'),
   priceUnit: z.enum(['year', 'month', 'day']).optional(),
   state: z.string().min(1, 'Please select a state'),
   city: z.string().min(1, 'Please select a city'),
   locality: z.string().min(1, 'Please select a locality'),
-  address: z.string().min(5, 'Address must be at least 5 characters').max(200, 'Address must be less than 200 characters'),
-  bedrooms: z.number().min(0).max(20),
-  bathrooms: z.number().min(0).max(20),
-  toilets: z.number().min(0).max(20),
-  size: z.number().min(1, 'Size must be at least 1 sqm'),
-  description: z.string().min(50, 'Description must be at least 50 characters').max(2000, 'Description must be less than 2000 characters'),
+  address: z.string()
+    .trim()
+    .min(5, 'Address must be at least 5 characters')
+    .max(200, 'Address must be less than 200 characters')
+    .regex(/^[a-zA-Z0-9\s,.\-'#/]+$/, 'Address contains invalid characters'),
+  bedrooms: z.number()
+    .int('Bedrooms must be a whole number')
+    .min(0, 'Bedrooms cannot be negative')
+    .max(50, 'Maximum 50 bedrooms allowed'),
+  bathrooms: z.number()
+    .int('Bathrooms must be a whole number')
+    .min(0, 'Bathrooms cannot be negative')
+    .max(50, 'Maximum 50 bathrooms allowed'),
+  toilets: z.number()
+    .int('Toilets must be a whole number')
+    .min(0, 'Toilets cannot be negative')
+    .max(50, 'Maximum 50 toilets allowed'),
+  size: z.number()
+    .min(1, 'Size must be at least 1 sqm')
+    .max(100000, 'Size seems too large'),
+  description: z.string()
+    .trim()
+    .min(50, 'Description must be at least 50 characters')
+    .max(2000, 'Description must be less than 2000 characters'),
   isServiced: z.boolean(),
   isFurnished: z.boolean(),
-  agentName: z.string().min(2, 'Name must be at least 2 characters').max(100, 'Name must be less than 100 characters'),
-  agentPhone: z.string().min(10, 'Please enter a valid phone number').max(20, 'Phone number is too long'),
-  agentEmail: z.string().email('Please enter a valid email').optional().or(z.literal('')),
-  agentCompany: z.string().max(100, 'Company name must be less than 100 characters').optional().or(z.literal('')),
+  agentName: z.string()
+    .trim()
+    .min(2, 'Name must be at least 2 characters')
+    .max(100, 'Name must be less than 100 characters')
+    .regex(/^[a-zA-Z\s.\-']+$/, 'Name can only contain letters, spaces, and basic punctuation'),
+  agentPhone: z.string()
+    .trim()
+    .min(11, 'Phone number must be at least 11 digits')
+    .max(15, 'Phone number is too long')
+    .regex(nigerianPhoneRegex, 'Please enter a valid Nigerian phone number (e.g., 08012345678)'),
+  agentEmail: z.union([
+    z.string().email('Please enter a valid email address'),
+    z.literal('')
+  ]).optional(),
+  agentCompany: z.string()
+    .trim()
+    .max(100, 'Company name must be less than 100 characters')
+    .optional()
+    .or(z.literal('')),
+  features: z.array(z.string()).optional(),
 });
 
 const ListProperty = () => {
@@ -105,7 +152,7 @@ const ListProperty = () => {
     const formData = {
       title: title.trim(),
       propertyType: propertyType as 'house' | 'apartment' | 'shortlet',
-      listingType: listingType as 'rent' | 'sale',
+      listingType: listingType as 'rent' | 'sale' | 'shortlet',
       price: parseFloat(price) || 0,
       priceUnit: priceUnit as 'year' | 'month' | 'day',
       state,
