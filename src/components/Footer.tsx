@@ -30,7 +30,6 @@ export const Footer = () => {
               <Globe className="h-4 w-4" />
               English (NG)
             </button>
-            <span className="font-medium">₦ NGN</span>
           </div>
         </div>
       </div>

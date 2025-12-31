@@ -53,53 +53,30 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
   const [minPrice, setMinPrice] = useState(searchFilters?.minPrice || '');
   const [maxPrice, setMaxPrice] = useState(searchFilters?.maxPrice || '');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [isAnimatingOut, setIsAnimatingOut] = useState(false);
   const { toast } = useToast();
 
-  const validateAndSearch = () => {
-    // Validation
-    if (!location || location === '') {
-      toast({
-        title: "Please select a location",
-        description: "Choose where you want to search for properties",
-        variant: "destructive",
-      });
-      return false;
-    }
-    if (!listingType || listingType === 'all') {
-      toast({
-        title: "Please select listing type",
-        description: "Choose whether you want to rent or buy",
-        variant: "destructive",
-      });
-      return false;
-    }
-    if (!minPrice || minPrice === '' || minPrice === 'any') {
-      toast({
-        title: "Please select minimum price",
-        description: "Set your minimum budget",
-        variant: "destructive",
-      });
-      return false;
-    }
-    if (!maxPrice || maxPrice === '' || maxPrice === 'any') {
-      toast({
-        title: "Please select maximum price",
-        description: "Set your maximum budget",
-        variant: "destructive",
-      });
-      return false;
-    }
-
-    // If validation passes
+  const validateAndSearch = async () => {
+    // All fields are valid including "all" and "any" options
     const minVal = minPrice === 'any' ? '' : minPrice;
     const maxVal = maxPrice === 'any' ? '' : maxPrice;
-    onSearch?.({ location, listingType, minPrice: minVal, maxPrice: maxVal });
-    setIsSearchOpen(false); // Close the dropdown
+    
+    // Trigger the rubber band animation
+    setIsAnimatingOut(true);
+    
+    // Wait for animation then close
+    await new Promise(resolve => setTimeout(resolve, 400));
+    
+    onSearch?.({ location: location || 'all', listingType, minPrice: minVal, maxPrice: maxVal });
+    setIsSearchOpen(false);
+    setIsAnimatingOut(false);
     return true;
   };
 
   const handleDesktopSearch = () => {
-    validateAndSearch();
+    const minVal = minPrice === 'any' ? '' : minPrice;
+    const maxVal = maxPrice === 'any' ? '' : maxPrice;
+    onSearch?.({ location: location || 'all', listingType, minPrice: minVal, maxPrice: maxVal });
   };
 
   return (
@@ -252,14 +229,23 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
             {/* Search Panel */}
             <motion.div
               initial={{ y: '-100%', opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
+              animate={isAnimatingOut 
+                ? { y: [0, 15, -100], opacity: [1, 1, 0] } 
+                : { y: 0, opacity: 1 }
+              }
               exit={{ y: '-100%', opacity: 0 }}
-              transition={{ 
-                type: 'spring', 
-                damping: 25, 
-                stiffness: 300,
-                duration: 0.3 
-              }}
+              transition={isAnimatingOut 
+                ? { 
+                    duration: 0.4,
+                    times: [0, 0.3, 1],
+                    ease: [0.25, 0.46, 0.45, 0.94]
+                  }
+                : { 
+                    type: 'spring', 
+                    damping: 20, 
+                    stiffness: 300,
+                  }
+              }
               className="fixed top-0 left-0 right-0 bg-background z-50 shadow-xl rounded-b-2xl lg:hidden"
             >
               <div className="p-6">
