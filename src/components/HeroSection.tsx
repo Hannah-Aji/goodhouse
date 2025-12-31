@@ -5,6 +5,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
 import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
@@ -240,7 +247,7 @@ export const HeroSection = ({
             {/* Max Price Filter */}
             <Popover>
               <PopoverTrigger asChild>
-                <button className="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-background hover:border-foreground/30 transition-colors text-sm font-medium whitespace-nowrap">
+                <button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-background hover:border-foreground/30 transition-colors text-sm font-medium whitespace-nowrap">
                   Max: {localFilters.maxPrice === Infinity ? 'Any' : `₦${(localFilters.maxPrice / 1000000).toFixed(0)}M`}
                   <ChevronDown className="h-4 w-4 text-muted-foreground" />
                 </button>
@@ -268,9 +275,9 @@ export const HeroSection = ({
             </Popover>
           </div>
 
-          {/* All Filters Button */}
-          <Popover open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
-            <PopoverTrigger asChild>
+          {/* All Filters Button - Using Modal */}
+          <Dialog open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
+            <DialogTrigger asChild>
               <button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-background hover:border-foreground/30 transition-colors text-sm font-medium shrink-0">
                 <SlidersHorizontal className="h-4 w-4" />
                 <span className="hidden sm:inline">Filters</span>
@@ -280,11 +287,11 @@ export const HeroSection = ({
                   </span>
                 )}
               </button>
-            </PopoverTrigger>
-            <PopoverContent className="w-80 p-4 bg-background z-50" align="end">
-              <div className="space-y-4">
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-md max-h-[85vh] overflow-y-auto">
+              <DialogHeader>
                 <div className="flex items-center justify-between">
-                  <h3 className="font-semibold">All Filters</h3>
+                  <DialogTitle>All Filters</DialogTitle>
                   <button 
                     onClick={clearFilters}
                     className="text-sm text-muted-foreground hover:text-foreground"
@@ -292,10 +299,12 @@ export const HeroSection = ({
                     Clear all
                   </button>
                 </div>
-
+              </DialogHeader>
+              
+              <div className="space-y-6 pt-4">
                 {/* Size Filter */}
                 <div>
-                  <h4 className="text-sm font-medium mb-2">Size</h4>
+                  <h4 className="text-sm font-medium mb-3">Size</h4>
                   <div className="flex flex-col gap-1">
                     {sizeRanges.map((range) => (
                       <button
@@ -317,7 +326,7 @@ export const HeroSection = ({
 
                 {/* Serviced Filter */}
                 <div>
-                  <h4 className="text-sm font-medium mb-2">Serviced</h4>
+                  <h4 className="text-sm font-medium mb-3">Serviced</h4>
                   <div className="flex flex-wrap gap-2">
                     {(['any', 'serviced', 'unserviced'] as const).map((option) => (
                       <button
@@ -337,7 +346,7 @@ export const HeroSection = ({
 
                 {/* Furnished Filter */}
                 <div>
-                  <h4 className="text-sm font-medium mb-2">Furnished</h4>
+                  <h4 className="text-sm font-medium mb-3">Furnished</h4>
                   <div className="flex flex-wrap gap-2">
                     {(['any', 'furnished', 'unfurnished'] as const).map((option) => (
                       <button
@@ -357,7 +366,7 @@ export const HeroSection = ({
 
                 {/* Features */}
                 <div>
-                  <h4 className="text-sm font-medium mb-2">Features</h4>
+                  <h4 className="text-sm font-medium mb-3">Features</h4>
                   <div className="flex flex-wrap gap-2">
                     {featuresList.map((feature) => (
                       <button
@@ -376,12 +385,12 @@ export const HeroSection = ({
                 </div>
 
                 {/* Apply Button */}
-                <Button onClick={applyFilters} className="w-full">
+                <Button onClick={applyFilters} className="w-full" size="lg">
                   Apply Filters
                 </Button>
               </div>
-            </PopoverContent>
-          </Popover>
+            </DialogContent>
+          </Dialog>
         </div>
       </div>
     </section>

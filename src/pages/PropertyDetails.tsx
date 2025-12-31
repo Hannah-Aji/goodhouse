@@ -594,15 +594,15 @@ const PropertyDetails = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-3">
-                    <a href={`tel:${property.agent.phone}`}>
+                  <div className="flex flex-col gap-3">
+                    <a href={`tel:${property.agent.phone}`} className="block">
                       <Button className="w-full gap-2" size="lg">
                         <Phone className="h-4 w-4" />
                         Call Agent
                       </Button>
                     </a>
                     
-                    <a href={`https://wa.me/${property.agent.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer">
+                    <a href={`https://wa.me/${property.agent.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer" className="block">
                       <Button variant="outline" className="w-full gap-2" size="lg">
                         <MessageCircle className="h-4 w-4" />
                         WhatsApp
@@ -610,7 +610,7 @@ const PropertyDetails = () => {
                     </a>
 
                     {property.agent.email && (
-                      <a href={`mailto:${property.agent.email}?subject=Inquiry about: ${property.title}`}>
+                      <a href={`mailto:${property.agent.email}?subject=Inquiry about: ${property.title}`} className="block">
                         <Button variant="outline" className="w-full gap-2" size="lg">
                           <Mail className="h-4 w-4" />
                           Send Email
