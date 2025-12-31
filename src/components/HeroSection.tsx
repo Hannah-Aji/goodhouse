@@ -127,59 +127,26 @@ export const HeroSection = ({
 
   return (
     <section className="border-b border-border">
-      {/* Category Tabs with Dark Purple Background & Animated Logo */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-purple-950 via-purple-900 to-black">
-        {/* Textured overlay for depth */}
-        <div className="absolute inset-0 opacity-30" style={{
-          backgroundImage: `radial-gradient(circle at 1px 1px, rgba(139, 92, 246, 0.3) 1px, transparent 0)`,
-          backgroundSize: '20px 20px'
-        }} />
-        
-        {/* Animated Logo Background */}
+      {/* Category Tabs with Blurred Neon Blue Logo */}
+      <div className="relative overflow-hidden bg-background">
+        {/* Blurred Neon Blue Logo Background */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <motion.div
             animate={{
-              scale: [1, 1.05, 1],
-              opacity: [0.15, 0.25, 0.15],
+              scale: [1, 1.02, 1],
+              opacity: [0.12, 0.18, 0.12],
             }}
             transition={{
               duration: 4,
               repeat: Infinity,
               ease: "easeInOut"
             }}
-            className="relative"
+            className="text-5xl md:text-7xl font-black tracking-tight text-cyan-400 blur-[3px] select-none"
+            style={{
+              textShadow: '0 0 40px rgba(34, 211, 238, 0.6), 0 0 80px rgba(34, 211, 238, 0.4)'
+            }}
           >
-            {/* Glowing purple aura */}
-            <motion.div 
-              animate={{
-                scale: [1, 1.2, 1],
-                opacity: [0.3, 0.5, 0.3],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut",
-                delay: 0.5
-              }}
-              className="absolute inset-0 bg-purple-500 blur-3xl rounded-full scale-150"
-            />
-            
-            {/* Logo text */}
-            <motion.div
-              animate={{
-                y: [0, -5, 0],
-              }}
-              transition={{
-                duration: 3,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              className="relative text-center"
-            >
-              <div className="text-4xl md:text-6xl font-black tracking-tight text-purple-400/40 blur-[1px]">
-                good house
-              </div>
-            </motion.div>
+            good house
           </motion.div>
         </div>
         
@@ -191,8 +158,8 @@ export const HeroSection = ({
                 onClick={() => onCategoryChange?.(category.id)}
                 className={`flex flex-col items-center gap-2 min-w-[64px] pb-3 border-b-2 transition-all ${
                   activeCategory === category.id
-                    ? 'border-purple-400 text-white'
-                    : 'border-transparent text-purple-200/70 hover:text-white hover:border-purple-400/50'
+                    ? 'border-foreground text-foreground'
+                    : 'border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30'
                 }`}
               >
                 <span className="text-2xl">{category.icon}</span>
