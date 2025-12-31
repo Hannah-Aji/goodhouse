@@ -126,11 +126,7 @@ export const PropertyCard = ({ property, index = 0 }: PropertyCardProps) => {
         {/* Price Insight Badge */}
         {priceInsight && (
           <div className="absolute top-3 right-3 z-10">
-            {priceInsight.isGreatDeal ? (
-              <span className="inline-flex items-center px-2 py-1 text-xs font-bold rounded-md backdrop-blur-sm bg-emerald-500/90 text-white">
-                Great Deal
-              </span>
-            ) : priceInsight.isEqual ? (
+            {priceInsight.isEqual ? (
               <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md backdrop-blur-sm bg-muted/90 text-foreground">
                 <Minus className="h-3 w-3" strokeWidth={2.5} />
                 Around avg
