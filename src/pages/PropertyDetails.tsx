@@ -28,7 +28,11 @@ import {
   ChevronRight,
   Star,
   ExternalLink,
-  Bell
+  Bell,
+  RefreshCw,
+  TrendingDown,
+  TrendingUp,
+  Minus
 } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -44,6 +48,64 @@ const PropertyDetails = () => {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [isNotifyDialogOpen, setIsNotifyDialogOpen] = useState(false);
   const { toast } = useToast();
+
+  // Calculate area average price (mock calculation based on similar properties)
+  const getAreaPriceComparison = () => {
+    if (!property) return null;
+    
+    // Find similar properties in the same area with same type
+    const similarProperties = mockProperties.filter(p => 
+      p.location.area === property.location.area &&
+      p.type === property.type &&
+      p.propertyType === property.propertyType &&
+      p.id !== property.id
+    );
+    
+    // If not enough in same area, expand to city
+    const comparisonSet = similarProperties.length >= 2 
+      ? similarProperties 
+      : mockProperties.filter(p => 
+          p.location.city === property.location.city &&
+          p.type === property.type &&
+          p.propertyType === property.propertyType &&
+          p.id !== property.id
+        );
+    
+    if (comparisonSet.length === 0) return null;
+    
+    // Calculate average price per sqm for comparison
+    const avgPricePerSqm = comparisonSet.reduce((sum, p) => sum + (p.price / p.size), 0) / comparisonSet.length;
+    const propertyPricePerSqm = property.price / property.size;
+    
+    const percentageDiff = ((propertyPricePerSqm - avgPricePerSqm) / avgPricePerSqm) * 100;
+    
+    return {
+      percentage: Math.abs(Math.round(percentageDiff)),
+      isHigher: percentageDiff > 0,
+      isEqual: Math.abs(percentageDiff) < 5,
+      comparisonCount: comparisonSet.length,
+      areaName: similarProperties.length >= 2 ? property.location.area : property.location.city
+    };
+  };
+
+  // Mock last scraped date (would come from DB in real implementation)
+  const lastScrapedAt = new Date(property?.createdAt || new Date());
+  lastScrapedAt.setDate(lastScrapedAt.getDate() + Math.floor(Math.random() * 7)); // Random 0-7 days ago
+  
+  const formatLastRefreshed = (date: Date) => {
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    
+    if (diffHours < 1) return 'Just now';
+    if (diffHours < 24) return `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+    if (diffDays === 1) return 'Yesterday';
+    if (diffDays < 7) return `${diffDays} days ago`;
+    return date.toLocaleDateString('en-NG', { month: 'short', day: 'numeric' });
+  };
+
+  const priceComparison = getAreaPriceComparison();
 
   if (!property) {
     return (
@@ -299,6 +361,34 @@ const PropertyDetails = () => {
                     <span className="text-lg font-normal text-muted-foreground"> / {property.priceUnit}</span>
                   )}
                 </p>
+                
+                {/* Price Comparison */}
+                {priceComparison && (
+                  <div className={`mt-3 inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium ${
+                    priceComparison.isEqual 
+                      ? 'bg-muted text-muted-foreground'
+                      : priceComparison.isHigher 
+                        ? 'bg-amber-100 text-amber-800 dark:bg-amber-900/30 dark:text-amber-400'
+                        : 'bg-emerald-100 text-emerald-800 dark:bg-emerald-900/30 dark:text-emerald-400'
+                  }`}>
+                    {priceComparison.isEqual ? (
+                      <>
+                        <Minus className="h-4 w-4" />
+                        Around average for {priceComparison.areaName}
+                      </>
+                    ) : priceComparison.isHigher ? (
+                      <>
+                        <TrendingUp className="h-4 w-4" />
+                        {priceComparison.percentage}% above typical {property.propertyType}s in {priceComparison.areaName}
+                      </>
+                    ) : (
+                      <>
+                        <TrendingDown className="h-4 w-4" />
+                        {priceComparison.percentage}% below typical {property.propertyType}s in {priceComparison.areaName}
+                      </>
+                    )}
+                  </div>
+                )}
               </div>
 
               {/* Key Details */}
@@ -511,8 +601,14 @@ const PropertyDetails = () => {
                 </div>
 
                 {/* Source Attribution */}
-                <div className="bg-muted/50 border border-border rounded-xl p-4 text-center">
-                  <p className="text-xs text-muted-foreground">
+                <div className="bg-muted/50 border border-border rounded-xl p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="text-xs text-muted-foreground flex items-center gap-1.5">
+                      <RefreshCw className="h-3 w-3" />
+                      Last refreshed: {formatLastRefreshed(lastScrapedAt)}
+                    </p>
+                  </div>
+                  <p className="text-xs text-muted-foreground text-center">
                     This listing was scraped from{' '}
                     <a 
                       href="https://nigeriapropertycenter.com" 
