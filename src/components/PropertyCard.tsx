@@ -40,7 +40,7 @@ export const PropertyCard = ({ property, index = 0 }: PropertyCardProps) => {
     );
     
     // If not enough in same area, expand to city
-    const comparisonSet = similarProperties.length >= 2 
+    let comparisonSet = similarProperties.length >= 1 
       ? similarProperties 
       : mockProperties.filter(p => 
           p.location.city === property.location.city &&
@@ -48,6 +48,15 @@ export const PropertyCard = ({ property, index = 0 }: PropertyCardProps) => {
           p.propertyType === property.propertyType &&
           p.id !== property.id
         );
+    
+    // If still not enough, expand to same property type and listing type across all locations
+    if (comparisonSet.length === 0) {
+      comparisonSet = mockProperties.filter(p => 
+        p.type === property.type &&
+        p.propertyType === property.propertyType &&
+        p.id !== property.id
+      );
+    }
     
     if (comparisonSet.length === 0) return null;
     
