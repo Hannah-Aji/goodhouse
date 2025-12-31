@@ -146,7 +146,7 @@ export const HeroSection = ({
               textShadow: '0 0 60px rgba(34, 211, 238, 0.8), 0 0 120px rgba(34, 211, 238, 0.5), 0 0 180px rgba(34, 211, 238, 0.3)'
             }}
           >
-            good&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;house
+            good&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;house
           </motion.div>
         </div>
         
