@@ -28,7 +28,7 @@ const featuresList = [
 const propertySchema = z.object({
   title: z.string().min(10, 'Title must be at least 10 characters').max(100, 'Title must be less than 100 characters'),
   propertyType: z.enum(['house', 'apartment', 'shortlet'], { required_error: 'Please select a property type' }),
-  listingType: z.enum(['rent', 'sale'], { required_error: 'Please select listing type' }),
+  listingType: z.enum(['rent', 'sale', 'shortlet'], { required_error: 'Please select listing type' }),
   price: z.number().min(1000, 'Price must be at least ₦1,000'),
   priceUnit: z.enum(['year', 'month', 'day']).optional(),
   state: z.string().min(1, 'Please select a state'),
@@ -253,11 +253,12 @@ const ListProperty = () => {
                       <Label>Listing Type *</Label>
                       <Select value={listingType} onValueChange={setListingType}>
                         <SelectTrigger className={errors.listingType ? 'border-destructive' : ''}>
-                          <SelectValue placeholder="For rent or sale" />
+                          <SelectValue placeholder="Select listing type" />
                         </SelectTrigger>
                         <SelectContent className="bg-background">
                           <SelectItem value="rent">For Rent</SelectItem>
                           <SelectItem value="sale">For Sale</SelectItem>
+                          <SelectItem value="shortlet">For Shortlet</SelectItem>
                         </SelectContent>
                       </Select>
                       {errors.listingType && <p className="text-sm text-destructive mt-1">{errors.listingType}</p>}
