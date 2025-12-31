@@ -159,7 +159,7 @@ export const HeroSection = ({
               <PopoverTrigger asChild>
                 <button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-background hover:border-foreground/30 transition-colors text-sm font-medium whitespace-nowrap">
                   Beds: {localFilters.bedrooms}
-                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                  <ChevronDown className="h-4 w-4 text-muted-foreground" strokeWidth={2.5} />
                 </button>
               </PopoverTrigger>
               <PopoverContent className="w-48 p-2 bg-background z-50">
@@ -189,7 +189,7 @@ export const HeroSection = ({
               <PopoverTrigger asChild>
                 <button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-background hover:border-foreground/30 transition-colors text-sm font-medium whitespace-nowrap">
                   Baths: {localFilters.bathrooms}
-                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                  <ChevronDown className="h-4 w-4 text-muted-foreground" strokeWidth={2.5} />
                 </button>
               </PopoverTrigger>
               <PopoverContent className="w-48 p-2 bg-background z-50">
@@ -219,7 +219,7 @@ export const HeroSection = ({
               <PopoverTrigger asChild>
                 <button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-background hover:border-foreground/30 transition-colors text-sm font-medium whitespace-nowrap">
                   Min: {localFilters.minPrice === 0 ? 'Any' : `₦${(localFilters.minPrice / 1000000).toFixed(0)}M`}
-                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                  <ChevronDown className="h-4 w-4 text-muted-foreground" strokeWidth={2.5} />
                 </button>
               </PopoverTrigger>
               <PopoverContent className="w-48 p-2 bg-background z-50">
@@ -249,7 +249,7 @@ export const HeroSection = ({
               <PopoverTrigger asChild>
                 <button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-background hover:border-foreground/30 transition-colors text-sm font-medium whitespace-nowrap">
                   Max: {localFilters.maxPrice === Infinity ? 'Any' : `₦${(localFilters.maxPrice / 1000000).toFixed(0)}M`}
-                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                  <ChevronDown className="h-4 w-4 text-muted-foreground" strokeWidth={2.5} />
                 </button>
               </PopoverTrigger>
               <PopoverContent className="w-48 p-2 bg-background z-50">
@@ -279,7 +279,7 @@ export const HeroSection = ({
           <Dialog open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
             <DialogTrigger asChild>
               <button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-background hover:border-foreground/30 transition-colors text-sm font-medium shrink-0">
-                <SlidersHorizontal className="h-4 w-4" />
+                <SlidersHorizontal className="h-4 w-4" strokeWidth={2.5} />
                 <span className="hidden sm:inline">Filters</span>
                 {activeFilterCount > 0 && (
                   <span className="flex items-center justify-center h-5 w-5 rounded-full bg-primary text-primary-foreground text-xs">
@@ -290,7 +290,7 @@ export const HeroSection = ({
             </DialogTrigger>
             <DialogContent className="sm:max-w-md max-h-[85vh] overflow-y-auto">
               <DialogHeader>
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between pr-6">
                   <DialogTitle>All Filters</DialogTitle>
                   <button 
                     onClick={clearFilters}
