@@ -72,7 +72,7 @@ export const FeaturedProperties = ({
         ) : (
           <>
             <p className="text-sm text-muted-foreground mb-6">
-              {properties.length} properties found
+              We found {properties.length} properties.
             </p>
             <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {properties.map((property, index) => (
