@@ -14,6 +14,30 @@ export type Database = {
   }
   public: {
     Tables: {
+      admin_settings: {
+        Row: {
+          created_at: string
+          id: string
+          setting_key: string
+          setting_value: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          setting_key: string
+          setting_value: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          setting_key?: string
+          setting_value?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       agents: {
         Row: {
           company: string | null
@@ -225,6 +249,96 @@ export type Database = {
           country?: string | null
           id?: number
           state?: string | null
+        }
+        Relationships: []
+      }
+      property_submissions: {
+        Row: {
+          address: string
+          agent_company: string | null
+          agent_email: string | null
+          agent_name: string
+          agent_phone: string
+          bathrooms: number | null
+          bedrooms: number | null
+          city: string
+          created_at: string
+          description: string | null
+          features: string[] | null
+          id: string
+          is_furnished: boolean | null
+          is_serviced: boolean | null
+          listing_type: string
+          locality: string
+          price: number
+          price_period: string | null
+          property_type: string
+          rejection_reason: string | null
+          reviewed_at: string | null
+          size: number | null
+          state: string
+          status: string
+          title: string
+          toilets: number | null
+          updated_at: string
+        }
+        Insert: {
+          address: string
+          agent_company?: string | null
+          agent_email?: string | null
+          agent_name: string
+          agent_phone: string
+          bathrooms?: number | null
+          bedrooms?: number | null
+          city: string
+          created_at?: string
+          description?: string | null
+          features?: string[] | null
+          id?: string
+          is_furnished?: boolean | null
+          is_serviced?: boolean | null
+          listing_type: string
+          locality: string
+          price: number
+          price_period?: string | null
+          property_type: string
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          size?: number | null
+          state: string
+          status?: string
+          title: string
+          toilets?: number | null
+          updated_at?: string
+        }
+        Update: {
+          address?: string
+          agent_company?: string | null
+          agent_email?: string | null
+          agent_name?: string
+          agent_phone?: string
+          bathrooms?: number | null
+          bedrooms?: number | null
+          city?: string
+          created_at?: string
+          description?: string | null
+          features?: string[] | null
+          id?: string
+          is_furnished?: boolean | null
+          is_serviced?: boolean | null
+          listing_type?: string
+          locality?: string
+          price?: number
+          price_period?: string | null
+          property_type?: string
+          rejection_reason?: string | null
+          reviewed_at?: string | null
+          size?: number | null
+          state?: string
+          status?: string
+          title?: string
+          toilets?: number | null
+          updated_at?: string
         }
         Relationships: []
       }
