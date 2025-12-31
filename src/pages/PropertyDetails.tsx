@@ -13,6 +13,12 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { 
   ArrowLeft, 
   Share, 
@@ -32,7 +38,10 @@ import {
   RefreshCw,
   TrendingDown,
   TrendingUp,
-  Minus
+  Minus,
+  Copy,
+  Twitter,
+  Facebook
 } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -347,41 +356,60 @@ const PropertyDetails = () => {
                       </div>
                     </DialogContent>
                   </Dialog>
-                  <Button 
-                    variant="outline" 
-                    size="icon"
-                    onClick={async () => {
-                      const shareUrl = window.location.href;
-                      const shareData = {
-                        title: property.title,
-                        text: `Check out this property: ${property.title} - ${formatPriceFull(property.price)}`,
-                        url: shareUrl,
-                      };
-                      
-                      try {
-                        if (navigator.share && navigator.canShare(shareData)) {
-                          await navigator.share(shareData);
-                        } else {
-                          await navigator.clipboard.writeText(shareUrl);
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="icon">
+                        <Share className="h-5 w-5" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48 bg-background">
+                      <DropdownMenuItem
+                        onClick={() => {
+                          const shareUrl = window.location.href;
+                          const text = encodeURIComponent(`Check out this property: ${property.title}`);
+                          window.open(`https://wa.me/?text=${text}%20${encodeURIComponent(shareUrl)}`, '_blank');
+                        }}
+                        className="cursor-pointer"
+                      >
+                        <MessageCircle className="h-4 w-4 mr-2" />
+                        WhatsApp
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          const shareUrl = window.location.href;
+                          const text = encodeURIComponent(`Check out this property: ${property.title}`);
+                          window.open(`https://twitter.com/intent/tweet?text=${text}&url=${encodeURIComponent(shareUrl)}`, '_blank');
+                        }}
+                        className="cursor-pointer"
+                      >
+                        <Twitter className="h-4 w-4 mr-2" />
+                        Twitter / X
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => {
+                          const shareUrl = window.location.href;
+                          window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`, '_blank');
+                        }}
+                        className="cursor-pointer"
+                      >
+                        <Facebook className="h-4 w-4 mr-2" />
+                        Facebook
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={async () => {
+                          await navigator.clipboard.writeText(window.location.href);
                           toast({
                             title: "Link copied!",
                             description: "Property link has been copied to clipboard",
                           });
-                        }
-                      } catch (error) {
-                        // User cancelled or error - try clipboard fallback
-                        if ((error as Error).name !== 'AbortError') {
-                          await navigator.clipboard.writeText(shareUrl);
-                          toast({
-                            title: "Link copied!",
-                            description: "Property link has been copied to clipboard",
-                          });
-                        }
-                      }
-                    }}
-                  >
-                    <Share className="h-5 w-5" />
-                  </Button>
+                        }}
+                        className="cursor-pointer"
+                      >
+                        <Copy className="h-4 w-4 mr-2" />
+                        Copy Link
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </div>
 
