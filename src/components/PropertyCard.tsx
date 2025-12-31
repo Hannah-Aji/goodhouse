@@ -1,5 +1,5 @@
 import { Property, formatPrice } from '@/data/properties';
-import { MapPin, Bed, Bath, Maximize, Heart, Star } from 'lucide-react';
+import { Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -10,7 +10,6 @@ interface PropertyCardProps {
 }
 
 export const PropertyCard = ({ property, index = 0 }: PropertyCardProps) => {
-  const [isLiked, setIsLiked] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
@@ -30,22 +29,6 @@ export const PropertyCard = ({ property, index = 0 }: PropertyCardProps) => {
             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             onLoad={() => setImageLoaded(true)}
           />
-          
-          {/* Like Button */}
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-              e.stopPropagation();
-              setIsLiked(!isLiked);
-            }}
-            className="absolute top-3 right-3 p-1.5 transition-transform hover:scale-110"
-          >
-            <Heart 
-              className={`h-6 w-6 drop-shadow-md transition-colors ${
-                isLiked ? 'fill-primary text-primary' : 'fill-foreground/30 text-background'
-              }`} 
-            />
-          </button>
 
           {/* Type Badge */}
           <div className="absolute top-3 left-3">

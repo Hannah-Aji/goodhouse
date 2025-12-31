@@ -475,7 +475,8 @@ const PropertyDetails = () => {
                     )}
                     <div>
                       <p className="font-semibold text-foreground">{property.agent.name}</p>
-                      <p className="text-sm text-muted-foreground">Property Agent</p>
+                      <p className="text-sm text-primary font-medium">{property.agent.company}</p>
+                      <p className="text-xs text-muted-foreground">Property Agent</p>
                     </div>
                   </div>
 

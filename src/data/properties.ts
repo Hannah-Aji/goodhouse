@@ -23,6 +23,7 @@ export interface Property {
   description: string;
   agent: {
     name: string;
+    company: string;
     phone: string;
     email?: string;
     image?: string;
@@ -61,7 +62,8 @@ export const mockProperties: Property[] = [
     features: ['Swimming Pool', 'Smart Home', 'Garage', 'BQ', '24/7 Security', 'Gym'],
     description: 'This stunning 4-bedroom duplex offers the epitome of luxury living in one of Lagos\'s most prestigious neighborhoods. The property features a modern open-plan design with floor-to-ceiling windows that flood the space with natural light. The master suite includes a walk-in closet and spa-like bathroom. Outside, enjoy the private swimming pool and beautifully landscaped garden. Smart home technology throughout allows you to control lighting, security, and climate with ease.',
     agent: { 
-      name: 'Adebayo Okonkwo', 
+      name: 'Adebayo Okonkwo',
+      company: 'Prime Realty Nigeria',
       phone: '+234 801 234 5678',
       email: 'adebayo@goodhouses.com',
       image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80'
@@ -99,7 +101,8 @@ export const mockProperties: Property[] = [
     features: ['24/7 Power', 'Gym', 'Security', 'Parking', 'Swimming Pool', 'Elevator'],
     description: 'Experience premium living in this fully serviced 3-bedroom apartment located in the heart of Victoria Island. This contemporary unit features high-end finishes, including Italian marble floors and German kitchen appliances. Residents enjoy access to world-class amenities including a rooftop pool, fully-equipped gym, and 24-hour concierge service. Perfect for professionals and families who appreciate convenience and luxury.',
     agent: { 
-      name: 'Chioma Eze', 
+      name: 'Chioma Eze',
+      company: 'Elite Properties Ltd',
       phone: '+234 802 345 6789',
       email: 'chioma@goodhouses.com',
       image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=200&q=80'
@@ -136,7 +139,8 @@ export const mockProperties: Property[] = [
     features: ['Swimming Pool', 'Private Jetty', 'Cinema Room', 'Wine Cellar', 'Smart Home', 'Garden', 'Staff Quarters'],
     description: 'An extraordinary waterfront mansion on the exclusive Banana Island. This architectural masterpiece spans three floors and offers unparalleled luxury with breathtaking lagoon views. Features include a private jetty for boat access, home cinema, wine cellar, and expansive outdoor entertainment areas. The property is finished with the finest materials imported from Italy and includes staff quarters and a 6-car garage.',
     agent: { 
-      name: 'Emmanuel Nwachukwu', 
+      name: 'Emmanuel Nwachukwu',
+      company: 'Luxury Homes Nigeria',
       phone: '+234 803 456 7890',
       email: 'emmanuel@goodhouses.com',
       image: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=200&q=80'
@@ -173,7 +177,8 @@ export const mockProperties: Property[] = [
     features: ['Prepaid Meter', 'Security', 'Water Supply', 'Parking'],
     description: 'A well-maintained 2-bedroom apartment ideal for young professionals or small families. Located in the vibrant Yaba neighborhood, close to tech hubs, restaurants, and public transportation. The apartment features modern finishes, ample natural light, and a functional layout that maximizes space.',
     agent: { 
-      name: 'Fatima Abdullahi', 
+      name: 'Fatima Abdullahi',
+      company: 'Urban Nest Realtors',
       phone: '+234 804 567 8901',
       email: 'fatima@goodhouses.com',
       image: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=200&q=80'
@@ -210,7 +215,8 @@ export const mockProperties: Property[] = [
     features: ['BQ', 'Garden', 'Security', 'Parking', 'Generator'],
     description: 'A beautifully finished 4-bedroom terrace house in the serene Ikeja GRA neighborhood. This property offers spacious living areas, a modern kitchen, and a private garden. The quiet, tree-lined streets provide a peaceful retreat while remaining close to shopping centers, schools, and the domestic airport.',
     agent: { 
-      name: 'Ngozi Okafor', 
+      name: 'Ngozi Okafor',
+      company: 'Homestead Properties',
       phone: '+234 806 789 0123',
       email: 'ngozi@goodhouses.com',
       image: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&q=80'
@@ -247,7 +253,8 @@ export const mockProperties: Property[] = [
     features: ['Ocean View', 'Private Terrace', 'Concierge', 'Gym', 'Pool', 'Smart Home'],
     description: 'An exceptional penthouse in the iconic Eko Atlantic City. This premium residence offers panoramic ocean views, a private rooftop terrace, and world-class amenities. The open-concept living space features floor-to-ceiling windows, designer finishes, and smart home technology. Residents enjoy exclusive access to the building\'s infinity pool, spa, and 24-hour concierge service.',
     agent: { 
-      name: 'Tunde Bakare', 
+      name: 'Tunde Bakare',
+      company: 'Atlantic Realty Group',
       phone: '+234 807 890 1234',
       email: 'tunde@goodhouses.com',
       image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=200&q=80'
@@ -284,7 +291,8 @@ export const mockProperties: Property[] = [
     features: ['Balcony', 'Security', 'Water Supply', 'Parking'],
     description: 'A spacious and well-ventilated 3-bedroom flat in the heart of Surulere. This apartment offers generous living spaces, modern finishes, and a convenient location near markets, schools, and entertainment venues. Ideal for families looking for comfort and accessibility.',
     agent: { 
-      name: 'Oluwaseun Adeyemi', 
+      name: 'Oluwaseun Adeyemi',
+      company: 'Lagos Property Hub',
       phone: '+234 808 901 2345',
       email: 'seun@goodhouses.com',
       image: 'https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=200&q=80'
@@ -321,7 +329,8 @@ export const mockProperties: Property[] = [
     features: ['Swimming Pool', 'Home Office', 'Staff Quarters', 'Generator', 'CCTV', 'Electric Fence'],
     description: 'A stunning contemporary home in prestigious Ikoyi. This 5-bedroom detached house combines modern architecture with practical luxury. Features include a home office, dedicated staff quarters, and comprehensive security systems. The outdoor space includes a swimming pool and BBQ area perfect for entertaining.',
     agent: { 
-      name: 'Adebayo Okonkwo', 
+      name: 'Adebayo Okonkwo',
+      company: 'Prime Realty Nigeria',
       phone: '+234 801 234 5678',
       email: 'adebayo@goodhouses.com',
       image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80'
