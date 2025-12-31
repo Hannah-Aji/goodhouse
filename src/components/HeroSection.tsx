@@ -12,7 +12,6 @@ import { Button } from '@/components/ui/button';
 const categories = [
   { id: 'house', label: 'Houses', icon: '🏡' },
   { id: 'apartment', label: 'Apartments', icon: '🏢' },
-  { id: 'shortlet', label: 'Shortlets', icon: '🏨' },
 ];
 
 const bedroomOptions = ['Any', '1', '2', '3', '4', '5+'];
@@ -42,14 +41,23 @@ export interface Filters {
   maxPrice: number;
 }
 
-const priceRanges = [
-  { label: 'Any', min: 0, max: Infinity },
-  { label: 'Under ₦5M', min: 0, max: 5000000 },
-  { label: '₦5M - ₦20M', min: 5000000, max: 20000000 },
-  { label: '₦20M - ₦50M', min: 20000000, max: 50000000 },
-  { label: '₦50M - ₦100M', min: 50000000, max: 100000000 },
-  { label: '₦100M - ₦500M', min: 100000000, max: 500000000 },
-  { label: 'Over ₦500M', min: 500000000, max: Infinity },
+const minPriceOptions = [
+  { label: 'Any', value: 0 },
+  { label: '₦5M', value: 5000000 },
+  { label: '₦20M', value: 20000000 },
+  { label: '₦50M', value: 50000000 },
+  { label: '₦100M', value: 100000000 },
+  { label: '₦500M', value: 500000000 },
+];
+
+const maxPriceOptions = [
+  { label: 'Any', value: Infinity },
+  { label: '₦5M', value: 5000000 },
+  { label: '₦20M', value: 20000000 },
+  { label: '₦50M', value: 50000000 },
+  { label: '₦100M', value: 100000000 },
+  { label: '₦500M', value: 500000000 },
+  { label: '₦1B+', value: 1000000000 },
 ];
 
 interface HeroSectionProps {
@@ -209,36 +217,20 @@ export const HeroSection = ({
               </PopoverTrigger>
               <PopoverContent className="w-48 p-2 bg-background z-50">
                 <div className="flex flex-col gap-1">
-                  {priceRanges.slice(0, 4).map((range) => (
+                  {minPriceOptions.map((option, index) => (
                     <button
-                      key={range.label}
+                      key={`min-${option.value}-${index}`}
                       onClick={() => {
-                        updateFilter('minPrice', range.min);
-                        onFiltersChange?.({ ...localFilters, minPrice: range.min });
+                        updateFilter('minPrice', option.value);
+                        onFiltersChange?.({ ...localFilters, minPrice: option.value });
                       }}
                       className={`px-3 py-2 text-left rounded-lg text-sm transition-colors ${
-                        localFilters.minPrice === range.min
+                        localFilters.minPrice === option.value
                           ? 'bg-primary text-primary-foreground'
                           : 'hover:bg-muted'
                       }`}
                     >
-                      {range.min === 0 ? 'Any' : `₦${(range.min / 1000000).toFixed(0)}M`}
-                    </button>
-                  ))}
-                  {priceRanges.slice(4).map((range) => (
-                    <button
-                      key={range.label}
-                      onClick={() => {
-                        updateFilter('minPrice', range.min);
-                        onFiltersChange?.({ ...localFilters, minPrice: range.min });
-                      }}
-                      className={`px-3 py-2 text-left rounded-lg text-sm transition-colors ${
-                        localFilters.minPrice === range.min
-                          ? 'bg-primary text-primary-foreground'
-                          : 'hover:bg-muted'
-                      }`}
-                    >
-                      ₦{(range.min / 1000000).toFixed(0)}M
+                      {option.label}
                     </button>
                   ))}
                 </div>
@@ -255,33 +247,20 @@ export const HeroSection = ({
               </PopoverTrigger>
               <PopoverContent className="w-48 p-2 bg-background z-50">
                 <div className="flex flex-col gap-1">
-                  <button
-                    onClick={() => {
-                      updateFilter('maxPrice', Infinity);
-                      onFiltersChange?.({ ...localFilters, maxPrice: Infinity });
-                    }}
-                    className={`px-3 py-2 text-left rounded-lg text-sm transition-colors ${
-                      localFilters.maxPrice === Infinity
-                        ? 'bg-primary text-primary-foreground'
-                        : 'hover:bg-muted'
-                    }`}
-                  >
-                    Any
-                  </button>
-                  {priceRanges.slice(1).map((range) => (
+                  {maxPriceOptions.map((option, index) => (
                     <button
-                      key={range.label}
+                      key={`max-${option.value}-${index}`}
                       onClick={() => {
-                        updateFilter('maxPrice', range.max);
-                        onFiltersChange?.({ ...localFilters, maxPrice: range.max });
+                        updateFilter('maxPrice', option.value);
+                        onFiltersChange?.({ ...localFilters, maxPrice: option.value });
                       }}
                       className={`px-3 py-2 text-left rounded-lg text-sm transition-colors ${
-                        localFilters.maxPrice === range.max
+                        localFilters.maxPrice === option.value
                           ? 'bg-primary text-primary-foreground'
                           : 'hover:bg-muted'
                       }`}
                     >
-                      {range.max === Infinity ? 'No Max' : `₦${(range.max / 1000000).toFixed(0)}M`}
+                      {option.label}
                     </button>
                   ))}
                 </div>

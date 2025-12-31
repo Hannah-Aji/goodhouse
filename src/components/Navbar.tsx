@@ -24,7 +24,7 @@ export interface SearchFilters {
   state: string;
   city: string;
   locality: string;
-  listingType: 'all' | 'rent' | 'sale';
+  listingType: 'all' | 'rent' | 'sale' | 'shortlet';
 }
 
 interface NavbarProps {
@@ -36,7 +36,7 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
   const [state, setState] = useState(searchFilters?.state || '');
   const [city, setCity] = useState(searchFilters?.city || '');
   const [locality, setLocality] = useState(searchFilters?.locality || '');
-  const [listingType, setListingType] = useState<'all' | 'rent' | 'sale'>(searchFilters?.listingType || 'all');
+  const [listingType, setListingType] = useState<'all' | 'rent' | 'sale' | 'shortlet'>(searchFilters?.listingType || 'all');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
   const { toast } = useToast();
@@ -136,16 +136,17 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
             
             <span className="h-6 w-px bg-border" />
             
-            {/* Rent/Sale */}
+            {/* I'm looking to */}
             <div className="px-3">
-              <Select value={listingType} onValueChange={(v) => setListingType(v as 'all' | 'rent' | 'sale')}>
-                <SelectTrigger className="border-0 shadow-none h-auto p-0 min-w-[70px] focus:ring-0">
-                  <SelectValue placeholder="Type" />
+              <Select value={listingType} onValueChange={(v) => setListingType(v as 'all' | 'rent' | 'sale' | 'shortlet')}>
+                <SelectTrigger className="border-0 shadow-none h-auto p-0 min-w-[100px] focus:ring-0">
+                  <SelectValue placeholder="I'm looking to" />
                 </SelectTrigger>
                 <SelectContent className="bg-background z-50">
                   <SelectItem value="all">All</SelectItem>
-                  <SelectItem value="rent">For Rent</SelectItem>
-                  <SelectItem value="sale">For Sale</SelectItem>
+                  <SelectItem value="sale">Buy</SelectItem>
+                  <SelectItem value="rent">Rent</SelectItem>
+                  <SelectItem value="shortlet">Shortlet</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -194,6 +195,11 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
               <Link to="/list-property" className="text-lg font-medium hover:text-primary transition-colors">
                 List a Property
               </Link>
+              <div className="border-t border-border mt-4 pt-4">
+                <Link to="/admin" className="text-lg font-medium text-muted-foreground hover:text-primary transition-colors">
+                  Admin Login
+                </Link>
+              </div>
             </nav>
           </SheetContent>
         </Sheet>
@@ -297,15 +303,16 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
                   </div>
                   
                   <div className="space-y-2">
-                    <label className="text-sm font-medium text-muted-foreground">Type</label>
-                    <Select value={listingType} onValueChange={(v) => setListingType(v as 'all' | 'rent' | 'sale')}>
+                    <label className="text-sm font-medium text-muted-foreground">I'm looking to</label>
+                    <Select value={listingType} onValueChange={(v) => setListingType(v as 'all' | 'rent' | 'sale' | 'shortlet')}>
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder="Rent or Sale" />
+                        <SelectValue placeholder="Buy, Rent, or Shortlet" />
                       </SelectTrigger>
                       <SelectContent className="bg-background z-[60]">
                         <SelectItem value="all">All</SelectItem>
-                        <SelectItem value="rent">For Rent</SelectItem>
-                        <SelectItem value="sale">For Sale</SelectItem>
+                        <SelectItem value="sale">Buy</SelectItem>
+                        <SelectItem value="rent">Rent</SelectItem>
+                        <SelectItem value="shortlet">Shortlet</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
