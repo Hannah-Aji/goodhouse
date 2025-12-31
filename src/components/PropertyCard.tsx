@@ -70,6 +70,7 @@ export const PropertyCard = ({ property, index = 0 }: PropertyCardProps) => {
       percentage: Math.abs(Math.round(percentageDiff)),
       isHigher: percentageDiff > 0,
       isEqual: Math.abs(percentageDiff) < 5,
+      isGreatDeal: percentageDiff <= -15,
     };
   }, [property]);
 
@@ -112,18 +113,24 @@ export const PropertyCard = ({ property, index = 0 }: PropertyCardProps) => {
         {/* Price Insight Badge */}
         {priceInsight && !priceInsight.isEqual && (
           <div className="absolute top-3 right-3 z-10">
-            <span className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md backdrop-blur-sm ${
-              priceInsight.isHigher 
-                ? 'bg-amber-500/90 text-white'
-                : 'bg-emerald-500/90 text-white'
-            }`}>
-              {priceInsight.isHigher ? (
-                <TrendingUp className="h-3 w-3" />
-              ) : (
-                <TrendingDown className="h-3 w-3" />
-              )}
-              {priceInsight.percentage}% {priceInsight.isHigher ? 'above' : 'below'}
-            </span>
+            {priceInsight.isGreatDeal ? (
+              <span className="inline-flex items-center gap-1 px-2 py-1 text-xs font-bold rounded-md backdrop-blur-sm bg-emerald-500/90 text-white">
+                🔥 Great Deal
+              </span>
+            ) : (
+              <span className={`inline-flex items-center gap-1 px-2 py-1 text-xs font-medium rounded-md backdrop-blur-sm ${
+                priceInsight.isHigher 
+                  ? 'bg-amber-500/90 text-white'
+                  : 'bg-emerald-500/90 text-white'
+              }`}>
+                {priceInsight.isHigher ? (
+                  <TrendingUp className="h-3 w-3" strokeWidth={2.5} />
+                ) : (
+                  <TrendingDown className="h-3 w-3" strokeWidth={2.5} />
+                )}
+                {priceInsight.percentage}% {priceInsight.isHigher ? 'above' : 'below'}
+              </span>
+            )}
           </div>
         )}
 
@@ -159,7 +166,7 @@ export const PropertyCard = ({ property, index = 0 }: PropertyCardProps) => {
             </p>
             {property.isVerified && (
               <div className="flex items-center gap-1 shrink-0">
-                <Star className="h-4 w-4 fill-foreground text-foreground" />
+                <Star className="h-4 w-4 fill-foreground text-foreground" strokeWidth={2.5} />
                 <span className="text-sm font-medium">Verified</span>
               </div>
             )}
