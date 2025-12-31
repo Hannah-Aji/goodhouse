@@ -1,16 +1,9 @@
-import { Navbar } from '@/components/Navbar';
+import { Navbar, SearchFilters } from '@/components/Navbar';
 import { HeroSection, Filters } from '@/components/HeroSection';
 import { FeaturedProperties } from '@/components/FeaturedProperties';
 import { Footer } from '@/components/Footer';
 import { useState, useMemo } from 'react';
 import { mockProperties, Property } from '@/data/properties';
-
-interface SearchFilters {
-  location: string;
-  listingType: 'all' | 'rent' | 'sale';
-  minPrice: string;
-  maxPrice: string;
-}
 
 const defaultFilters: Filters = {
   bedrooms: 'Any',
@@ -25,7 +18,9 @@ const defaultFilters: Filters = {
 const Index = () => {
   const [activeCategory, setActiveCategory] = useState('all');
   const [searchFilters, setSearchFilters] = useState<SearchFilters>({
-    location: '',
+    state: '',
+    city: '',
+    locality: '',
     listingType: 'all',
     minPrice: '',
     maxPrice: '',
@@ -34,18 +29,31 @@ const Index = () => {
 
   const filteredProperties = useMemo(() => {
     return mockProperties.filter((property) => {
-      // Category filter (house/apartment)
+      // Category filter (house/apartment/shortlet)
       if (activeCategory !== 'all' && property.propertyType !== activeCategory) {
         return false;
       }
 
-      // Location filter
-      if (searchFilters.location && searchFilters.location !== 'all') {
-        const locationMatch = 
-          property.location.state.toLowerCase().includes(searchFilters.location.toLowerCase()) ||
-          property.location.city.toLowerCase().includes(searchFilters.location.toLowerCase()) ||
-          property.location.area.toLowerCase().includes(searchFilters.location.toLowerCase());
-        if (!locationMatch) return false;
+      // State filter
+      if (searchFilters.state && searchFilters.state !== 'all') {
+        if (property.location.state.toLowerCase() !== searchFilters.state.toLowerCase()) {
+          return false;
+        }
+      }
+
+      // City filter
+      if (searchFilters.city && searchFilters.city !== 'all') {
+        // Match against city or area since our data structure uses city differently
+        const cityMatch = 
+          property.location.city.toLowerCase() === searchFilters.city.toLowerCase();
+        if (!cityMatch) return false;
+      }
+
+      // Locality (area) filter
+      if (searchFilters.locality && searchFilters.locality !== 'all') {
+        if (property.location.area.toLowerCase() !== searchFilters.locality.toLowerCase()) {
+          return false;
+        }
       }
 
       // Listing type filter (rent/sale)

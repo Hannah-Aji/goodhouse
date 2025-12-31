@@ -2,9 +2,9 @@ export interface Property {
   id: string;
   title: string;
   type: 'rent' | 'sale';
-  propertyType: 'apartment' | 'house';
+  propertyType: 'apartment' | 'house' | 'shortlet';
   price: number;
-  priceUnit?: 'year' | 'month';
+  priceUnit?: 'year' | 'month' | 'day';
   location: {
     city: string;
     state: string;
