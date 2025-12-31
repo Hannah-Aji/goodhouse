@@ -168,6 +168,60 @@ const PropertyDetails = () => {
                   </p>
                 </div>
                 <div className="flex items-center gap-2 shrink-0">
+                  <Dialog open={isNotifyDialogOpen} onOpenChange={setIsNotifyDialogOpen}>
+                    <DialogTrigger asChild>
+                      <Button variant="outline" size="icon">
+                        <Bell className="h-5 w-5" />
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md">
+                      <DialogHeader>
+                        <DialogTitle>Get Price Alerts</DialogTitle>
+                        <DialogDescription>
+                          Enter your phone number to receive notifications about price changes and similar listings.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <div className="space-y-4 pt-4">
+                        <div className="space-y-2">
+                          <label htmlFor="phone" className="text-sm font-medium">
+                            Phone Number
+                          </label>
+                          <Input
+                            id="phone"
+                            type="tel"
+                            placeholder="+234 800 000 0000"
+                            value={phoneNumber}
+                            onChange={(e) => setPhoneNumber(e.target.value)}
+                            maxLength={20}
+                          />
+                          <p className="text-xs text-muted-foreground">
+                            We'll send you SMS alerts about this property
+                          </p>
+                        </div>
+                        <Button 
+                          className="w-full" 
+                          onClick={() => {
+                            if (phoneNumber.trim().length >= 10) {
+                              toast({
+                                title: "Notifications enabled!",
+                                description: "You'll receive alerts at " + phoneNumber,
+                              });
+                              setIsNotifyDialogOpen(false);
+                              setPhoneNumber('');
+                            } else {
+                              toast({
+                                title: "Invalid phone number",
+                                description: "Please enter a valid phone number",
+                                variant: "destructive",
+                              });
+                            }
+                          }}
+                        >
+                          Enable Notifications
+                        </Button>
+                      </div>
+                    </DialogContent>
+                  </Dialog>
                   <Button variant="outline" size="icon">
                     <Share className="h-5 w-5" />
                   </Button>
@@ -263,63 +317,9 @@ const PropertyDetails = () => {
               </div>
             </div>
 
-            {/* Right Column - Agent Contact */}
+            {/* Right Column - Price & Agent */}
             <div className="lg:col-span-1">
               <div className="sticky top-24 space-y-6">
-                {/* Agent Card */}
-                <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
-                  <h3 className="text-lg font-semibold mb-4">Contact Agent</h3>
-                  
-                  <div className="flex items-center gap-4 mb-6">
-                    {property.agent.image ? (
-                      <img 
-                        src={property.agent.image} 
-                        alt={property.agent.name}
-                        className="w-16 h-16 rounded-full object-cover"
-                      />
-                    ) : (
-                      <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
-                        <span className="text-xl font-semibold text-muted-foreground">
-                          {property.agent.name.charAt(0)}
-                        </span>
-                      </div>
-                    )}
-                    <div>
-                      <p className="font-semibold text-foreground">{property.agent.name}</p>
-                      <p className="text-sm text-muted-foreground">Property Agent</p>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <a href={`tel:${property.agent.phone}`}>
-                      <Button className="w-full gap-2" size="lg">
-                        <Phone className="h-4 w-4" />
-                        Call Agent
-                      </Button>
-                    </a>
-                    
-                    <a href={`https://wa.me/${property.agent.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer">
-                      <Button variant="outline" className="w-full gap-2" size="lg">
-                        <MessageCircle className="h-4 w-4" />
-                        WhatsApp
-                      </Button>
-                    </a>
-
-                    {property.agent.email && (
-                      <a href={`mailto:${property.agent.email}?subject=Inquiry about: ${property.title}`}>
-                        <Button variant="outline" className="w-full gap-2" size="lg">
-                          <Mail className="h-4 w-4" />
-                          Send Email
-                        </Button>
-                      </a>
-                    )}
-                  </div>
-
-                  <p className="text-xs text-muted-foreground text-center mt-4">
-                    Response time: Usually within 1 hour
-                  </p>
-                </div>
-
                 {/* Price Summary - Receipt Style */}
                 <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
                   {/* Receipt Header */}
@@ -392,62 +392,59 @@ const PropertyDetails = () => {
                   <div className="h-4 bg-[repeating-linear-gradient(90deg,transparent,transparent_8px,hsl(var(--border))_8px,hsl(var(--border))_16px)]" />
                 </div>
 
-                {/* Notification Button */}
-                <Dialog open={isNotifyDialogOpen} onOpenChange={setIsNotifyDialogOpen}>
-                  <DialogTrigger asChild>
-                    <Button variant="outline" className="w-full gap-2" size="lg">
-                      <Bell className="h-4 w-4" />
-                      Get Notified
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="sm:max-w-md">
-                    <DialogHeader>
-                      <DialogTitle>Get Price Alerts</DialogTitle>
-                      <DialogDescription>
-                        Enter your phone number to receive notifications about price changes and similar listings.
-                      </DialogDescription>
-                    </DialogHeader>
-                    <div className="space-y-4 pt-4">
-                      <div className="space-y-2">
-                        <label htmlFor="phone" className="text-sm font-medium">
-                          Phone Number
-                        </label>
-                        <Input
-                          id="phone"
-                          type="tel"
-                          placeholder="+234 800 000 0000"
-                          value={phoneNumber}
-                          onChange={(e) => setPhoneNumber(e.target.value)}
-                          maxLength={20}
-                        />
-                        <p className="text-xs text-muted-foreground">
-                          We'll send you SMS alerts about this property
-                        </p>
+                {/* Agent Card */}
+                <div className="bg-card border border-border rounded-2xl p-6 shadow-sm">
+                  <h3 className="text-lg font-semibold mb-4">Contact Agent</h3>
+                  
+                  <div className="flex items-center gap-4 mb-6">
+                    {property.agent.image ? (
+                      <img 
+                        src={property.agent.image} 
+                        alt={property.agent.name}
+                        className="w-16 h-16 rounded-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center">
+                        <span className="text-xl font-semibold text-muted-foreground">
+                          {property.agent.name.charAt(0)}
+                        </span>
                       </div>
-                      <Button 
-                        className="w-full" 
-                        onClick={() => {
-                          if (phoneNumber.trim().length >= 10) {
-                            toast({
-                              title: "Notifications enabled!",
-                              description: "You'll receive alerts at " + phoneNumber,
-                            });
-                            setIsNotifyDialogOpen(false);
-                            setPhoneNumber('');
-                          } else {
-                            toast({
-                              title: "Invalid phone number",
-                              description: "Please enter a valid phone number",
-                              variant: "destructive",
-                            });
-                          }
-                        }}
-                      >
-                        Enable Notifications
-                      </Button>
+                    )}
+                    <div>
+                      <p className="font-semibold text-foreground">{property.agent.name}</p>
+                      <p className="text-sm text-muted-foreground">Property Agent</p>
                     </div>
-                  </DialogContent>
-                </Dialog>
+                  </div>
+
+                  <div className="space-y-3">
+                    <a href={`tel:${property.agent.phone}`}>
+                      <Button className="w-full gap-2" size="lg">
+                        <Phone className="h-4 w-4" />
+                        Call Agent
+                      </Button>
+                    </a>
+                    
+                    <a href={`https://wa.me/${property.agent.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer">
+                      <Button variant="outline" className="w-full gap-2" size="lg">
+                        <MessageCircle className="h-4 w-4" />
+                        WhatsApp
+                      </Button>
+                    </a>
+
+                    {property.agent.email && (
+                      <a href={`mailto:${property.agent.email}?subject=Inquiry about: ${property.title}`}>
+                        <Button variant="outline" className="w-full gap-2" size="lg">
+                          <Mail className="h-4 w-4" />
+                          Send Email
+                        </Button>
+                      </a>
+                    )}
+                  </div>
+
+                  <p className="text-xs text-muted-foreground text-center mt-4">
+                    Response time: Usually within 1 hour
+                  </p>
+                </div>
               </div>
             </div>
           </div>

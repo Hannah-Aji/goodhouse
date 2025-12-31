@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Input } from '@/components/ui/input';
+
 import { Button } from '@/components/ui/button';
 import {
   Sheet,
@@ -17,7 +17,22 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { nigerianStates } from '@/data/properties';
+import { nigerianStates, formatPrice } from '@/data/properties';
+
+const priceOptions = [
+  { value: '', label: 'Any' },
+  { value: '500000', label: '₦500K' },
+  { value: '1000000', label: '₦1M' },
+  { value: '2000000', label: '₦2M' },
+  { value: '5000000', label: '₦5M' },
+  { value: '10000000', label: '₦10M' },
+  { value: '20000000', label: '₦20M' },
+  { value: '50000000', label: '₦50M' },
+  { value: '100000000', label: '₦100M' },
+  { value: '200000000', label: '₦200M' },
+  { value: '500000000', label: '₦500M' },
+  { value: '1000000000', label: '₦1B' },
+];
 
 interface SearchFilters {
   location: string;
@@ -38,13 +53,9 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
   const [maxPrice, setMaxPrice] = useState(searchFilters?.maxPrice || '');
 
   const handleSearch = () => {
-    onSearch?.({ location, listingType, minPrice, maxPrice });
-  };
-
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
-      handleSearch();
-    }
+    const minVal = minPrice === 'any' ? '' : minPrice;
+    const maxVal = maxPrice === 'any' ? '' : maxPrice;
+    onSearch?.({ location, listingType, minPrice: minVal, maxPrice: maxVal });
   };
 
   return (
@@ -95,29 +106,37 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
             <span className="h-6 w-px bg-border" />
             
             {/* Min Price */}
-            <div className="px-2">
-              <Input
-                type="number"
-                placeholder="Min ₦"
-                value={minPrice}
-                onChange={(e) => setMinPrice(e.target.value)}
-                onKeyDown={handleKeyDown}
-                className="border-0 shadow-none h-auto p-0 w-20 focus-visible:ring-0 text-sm"
-              />
+            <div className="px-3">
+              <Select value={minPrice} onValueChange={setMinPrice}>
+                <SelectTrigger className="border-0 shadow-none h-auto p-0 min-w-[70px] focus:ring-0">
+                  <SelectValue placeholder="Min ₦" />
+                </SelectTrigger>
+                <SelectContent className="bg-background z-50">
+                  {priceOptions.map((option) => (
+                    <SelectItem key={`min-${option.value}`} value={option.value || 'any'}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             
             <span className="h-6 w-px bg-border" />
             
             {/* Max Price */}
-            <div className="px-2">
-              <Input
-                type="number"
-                placeholder="Max ₦"
-                value={maxPrice}
-                onChange={(e) => setMaxPrice(e.target.value)}
-                onKeyDown={handleKeyDown}
-                className="border-0 shadow-none h-auto p-0 w-20 focus-visible:ring-0 text-sm"
-              />
+            <div className="px-3">
+              <Select value={maxPrice} onValueChange={setMaxPrice}>
+                <SelectTrigger className="border-0 shadow-none h-auto p-0 min-w-[70px] focus:ring-0">
+                  <SelectValue placeholder="Max ₦" />
+                </SelectTrigger>
+                <SelectContent className="bg-background z-50">
+                  {priceOptions.map((option) => (
+                    <SelectItem key={`max-${option.value}`} value={option.value || 'any'}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             
             {/* Search Button */}
@@ -171,18 +190,30 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
               </Select>
               
               <div className="flex gap-2">
-                <Input
-                  type="number"
-                  placeholder="Min Price"
-                  value={minPrice}
-                  onChange={(e) => setMinPrice(e.target.value)}
-                />
-                <Input
-                  type="number"
-                  placeholder="Max Price"
-                  value={maxPrice}
-                  onChange={(e) => setMaxPrice(e.target.value)}
-                />
+                <Select value={minPrice} onValueChange={setMinPrice}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Min Price" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background z-50">
+                    {priceOptions.map((option) => (
+                      <SelectItem key={`mob-min-${option.value}`} value={option.value || 'any'}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                <Select value={maxPrice} onValueChange={setMaxPrice}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Max Price" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-background z-50">
+                    {priceOptions.map((option) => (
+                      <SelectItem key={`mob-max-${option.value}`} value={option.value || 'any'}>
+                        {option.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
               
               <Button onClick={handleSearch} className="w-full">
