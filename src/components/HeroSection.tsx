@@ -1,4 +1,4 @@
-import { SlidersHorizontal, ChevronDown, X, Home } from 'lucide-react';
+import { SlidersHorizontal, ChevronDown, X } from 'lucide-react';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import {
@@ -168,7 +168,7 @@ export const HeroSection = ({
               className="absolute inset-0 bg-purple-500 blur-3xl rounded-full scale-150"
             />
             
-            {/* House icon */}
+            {/* Logo text */}
             <motion.div
               animate={{
                 y: [0, -5, 0],
@@ -178,26 +178,11 @@ export const HeroSection = ({
                 repeat: Infinity,
                 ease: "easeInOut"
               }}
-              className="relative"
+              className="relative text-center"
             >
-              <Home className="w-24 h-24 md:w-32 md:h-32 text-purple-400/40 blur-[1px]" strokeWidth={1.5} />
-            </motion.div>
-            
-            {/* Logo text */}
-            <motion.div 
-              animate={{
-                opacity: [0.3, 0.5, 0.3],
-              }}
-              transition={{
-                duration: 4,
-                repeat: Infinity,
-                ease: "easeInOut"
-              }}
-              className="text-center mt-2"
-            >
-              <span className="text-2xl md:text-3xl font-black tracking-tight text-purple-400/30 blur-[0.5px]">
-                GOOD HOUSE
-              </span>
+              <div className="text-4xl md:text-6xl font-black tracking-tight text-purple-400/40 blur-[1px]">
+                good house
+              </div>
             </motion.div>
           </motion.div>
         </div>
