@@ -56,6 +56,14 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
     setLocality('');
   }, [city]);
 
+  // Get display text for mobile search button
+  const getLocationDisplayText = () => {
+    if (locality && locality !== 'all') return locality;
+    if (city && city !== 'all') return city;
+    if (state && state !== 'all') return state;
+    return 'State · City · Locality';
+  };
+
   const validateAndSearch = async () => {
     setIsAnimatingOut(true);
     
@@ -92,7 +100,6 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
                   <SelectValue placeholder="State" />
                 </SelectTrigger>
                 <SelectContent className="bg-background z-50">
-                  <SelectItem value="all">All States</SelectItem>
                   {states.map((s) => (
                     <SelectItem key={s} value={s}>{s}</SelectItem>
                   ))}
@@ -104,7 +111,7 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
             
             {/* City */}
             <div className="px-3">
-              <Select value={city} onValueChange={setCity} disabled={!state || state === 'all'}>
+              <Select value={city} onValueChange={setCity} disabled={!state}>
                 <SelectTrigger className="border-0 shadow-none h-auto p-0 min-w-[80px] focus:ring-0">
                   <SelectValue placeholder="City" />
                 </SelectTrigger>
@@ -170,7 +177,7 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
           <Search className="h-5 w-5 text-muted-foreground" />
           <div className="text-left">
             <p className="text-sm font-medium">Find your next home</p>
-            <p className="text-xs text-muted-foreground">State · City · Locality</p>
+            <p className="text-xs text-muted-foreground">{getLocationDisplayText()}</p>
           </div>
         </button>
 
@@ -264,7 +271,6 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
                         <SelectValue placeholder="Select State" />
                       </SelectTrigger>
                       <SelectContent className="bg-background z-[60]">
-                        <SelectItem value="all">All States</SelectItem>
                         {states.map((s) => (
                           <SelectItem key={s} value={s}>{s}</SelectItem>
                         ))}
@@ -274,9 +280,9 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
 
                   <div className="space-y-2">
                     <label className="text-sm font-medium text-muted-foreground">City</label>
-                    <Select value={city} onValueChange={setCity} disabled={!state || state === 'all'}>
+                    <Select value={city} onValueChange={setCity} disabled={!state}>
                       <SelectTrigger className="w-full">
-                        <SelectValue placeholder={state && state !== 'all' ? "Select City" : "Select state first"} />
+                        <SelectValue placeholder={state ? "Select City" : "Select state first"} />
                       </SelectTrigger>
                       <SelectContent className="bg-background z-[60]">
                         <SelectItem value="all">All Cities</SelectItem>
