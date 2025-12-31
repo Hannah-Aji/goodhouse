@@ -36,6 +36,8 @@ export interface Filters {
   sizeRange: { min: number; max: number };
   features: string[];
   verified: boolean;
+  serviced: 'any' | 'serviced' | 'unserviced';
+  furnished: 'any' | 'furnished' | 'unfurnished';
 }
 
 interface HeroSectionProps {
@@ -51,6 +53,8 @@ const defaultFilters: Filters = {
   sizeRange: { min: 0, max: 10000 },
   features: [],
   verified: false,
+  serviced: 'any',
+  furnished: 'any',
 };
 
 export const HeroSection = ({ 
@@ -83,6 +87,8 @@ export const HeroSection = ({
     localFilters.sizeRange.min > 0 || localFilters.sizeRange.max < 10000,
     localFilters.features.length > 0,
     localFilters.verified,
+    localFilters.serviced !== 'any',
+    localFilters.furnished !== 'any',
   ].filter(Boolean).length;
 
   const toggleFeature = (feature: string) => {
@@ -248,6 +254,46 @@ export const HeroSection = ({
                   >
                     Clear all
                   </button>
+                </div>
+
+                {/* Serviced Filter */}
+                <div>
+                  <h4 className="text-sm font-medium mb-2">Serviced</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {(['any', 'serviced', 'unserviced'] as const).map((option) => (
+                      <button
+                        key={option}
+                        onClick={() => updateFilter('serviced', option)}
+                        className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors capitalize ${
+                          localFilters.serviced === option
+                            ? 'bg-primary text-primary-foreground'
+                            : 'bg-muted hover:bg-muted/80'
+                        }`}
+                      >
+                        {option === 'any' ? 'Any' : option}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Furnished Filter */}
+                <div>
+                  <h4 className="text-sm font-medium mb-2">Furnished</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {(['any', 'furnished', 'unfurnished'] as const).map((option) => (
+                      <button
+                        key={option}
+                        onClick={() => updateFilter('furnished', option)}
+                        className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors capitalize ${
+                          localFilters.furnished === option
+                            ? 'bg-primary text-primary-foreground'
+                            : 'bg-muted hover:bg-muted/80'
+                        }`}
+                      >
+                        {option === 'any' ? 'Any' : option}
+                      </button>
+                    ))}
+                  </div>
                 </div>
 
                 {/* Features */}

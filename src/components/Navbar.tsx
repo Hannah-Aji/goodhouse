@@ -86,7 +86,7 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
         <Link to="/" className="flex items-center gap-2 shrink-0">
           <div className="flex flex-col leading-none">
             <span className="text-xs font-medium text-muted-foreground tracking-wider uppercase">good</span>
-            <span className="text-xl font-bold text-foreground -mt-0.5">houses</span>
+            <span className="text-xl font-bold text-foreground -mt-0.5">house</span>
           </div>
         </Link>
 
@@ -196,16 +196,13 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
             </SheetHeader>
             <nav className="flex flex-col gap-4 mt-6">
               <Link to="/" className="text-lg font-medium hover:text-primary transition-colors">
-                Home
+                Find a Home
               </Link>
-              <Link to="/" className="text-lg font-medium hover:text-primary transition-colors">
-                Properties
-              </Link>
-              <Link to="/" className="text-lg font-medium hover:text-primary transition-colors">
+              <Link to="/about" className="text-lg font-medium hover:text-primary transition-colors">
                 About Us
               </Link>
-              <Link to="/" className="text-lg font-medium hover:text-primary transition-colors">
-                Contact
+              <Link to="/list-property" className="text-lg font-medium hover:text-primary transition-colors">
+                List a Property
               </Link>
             </nav>
           </SheetContent>
