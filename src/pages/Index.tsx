@@ -157,7 +157,7 @@ const Index = () => {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4, delay: 0.2 }}
         >
-          <FeaturedProperties properties={filteredProperties} />
+          <FeaturedProperties properties={filteredProperties} listingType={searchFilters.listingType} />
         </motion.div>
       </main>
       <Footer />

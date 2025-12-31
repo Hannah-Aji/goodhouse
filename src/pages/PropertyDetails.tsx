@@ -219,7 +219,7 @@ const PropertyDetails = () => {
             className="mt-4 md:hidden"
             onClick={() => setShowAllPhotos(true)}
           >
-            Show all {property.images.length} photos
+            View all {property.images.length} photos
           </Button>
         </motion.section>
 

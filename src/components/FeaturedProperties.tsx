@@ -5,6 +5,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 interface FeaturedPropertiesProps {
   properties: Property[];
   isLoading?: boolean;
+  listingType?: 'sale' | 'rent' | 'shortlet';
 }
 
 const PropertySkeleton = () => (
@@ -44,8 +45,19 @@ const PropertySkeleton = () => (
 
 export const FeaturedProperties = ({ 
   properties,
-  isLoading = false
+  isLoading = false,
+  listingType = 'sale'
 }: FeaturedPropertiesProps) => {
+  const getResultsText = () => {
+    switch (listingType) {
+      case 'rent':
+        return `We found ${properties.length} available rentals`;
+      case 'shortlet':
+        return `We found ${properties.length} available short-lets`;
+      default:
+        return `We found ${properties.length} available homes`;
+    }
+  };
 
   if (isLoading) {
     return (
@@ -72,7 +84,7 @@ export const FeaturedProperties = ({
         ) : (
           <>
             <p className="text-sm text-muted-foreground mb-6">
-              We found {properties.length} good options
+              {getResultsText()}
             </p>
             <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               {properties.map((property, index) => (
