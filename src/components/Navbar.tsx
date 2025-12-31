@@ -72,7 +72,7 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
   };
 
   return (
-    <header className="sticky top-0 z-50 w-full bg-background border-b border-border">
+    <header className="sticky top-0 z-50 w-full bg-background/80 backdrop-blur-md border-b border-border/50">
       <div className="container flex h-20 items-center justify-between gap-4">
         {/* Logo */}
         <Link to="/" className="flex items-center gap-2 shrink-0">

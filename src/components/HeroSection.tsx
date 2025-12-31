@@ -199,30 +199,89 @@ export const HeroSection = ({
               </PopoverContent>
             </Popover>
 
-            {/* Size Filter */}
+            {/* Min Price Filter */}
             <Popover>
               <PopoverTrigger asChild>
-                <button className="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-background hover:border-foreground/30 transition-colors text-sm font-medium whitespace-nowrap">
-                  Size
+                <button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-background hover:border-foreground/30 transition-colors text-sm font-medium whitespace-nowrap">
+                  Min: {localFilters.minPrice === 0 ? 'Any' : `₦${(localFilters.minPrice / 1000000).toFixed(0)}M`}
                   <ChevronDown className="h-4 w-4 text-muted-foreground" />
                 </button>
               </PopoverTrigger>
-              <PopoverContent className="w-56 p-2 bg-background z-50">
+              <PopoverContent className="w-48 p-2 bg-background z-50">
                 <div className="flex flex-col gap-1">
-                  {sizeRanges.map((range) => (
+                  {priceRanges.slice(0, 4).map((range) => (
                     <button
                       key={range.label}
                       onClick={() => {
-                        updateFilter('sizeRange', { min: range.min, max: range.max });
-                        onFiltersChange?.({ ...localFilters, sizeRange: { min: range.min, max: range.max } });
+                        updateFilter('minPrice', range.min);
+                        onFiltersChange?.({ ...localFilters, minPrice: range.min });
                       }}
                       className={`px-3 py-2 text-left rounded-lg text-sm transition-colors ${
-                        localFilters.sizeRange.min === range.min && localFilters.sizeRange.max === range.max
+                        localFilters.minPrice === range.min
                           ? 'bg-primary text-primary-foreground'
                           : 'hover:bg-muted'
                       }`}
                     >
-                      {range.label}
+                      {range.min === 0 ? 'Any' : `₦${(range.min / 1000000).toFixed(0)}M`}
+                    </button>
+                  ))}
+                  {priceRanges.slice(4).map((range) => (
+                    <button
+                      key={range.label}
+                      onClick={() => {
+                        updateFilter('minPrice', range.min);
+                        onFiltersChange?.({ ...localFilters, minPrice: range.min });
+                      }}
+                      className={`px-3 py-2 text-left rounded-lg text-sm transition-colors ${
+                        localFilters.minPrice === range.min
+                          ? 'bg-primary text-primary-foreground'
+                          : 'hover:bg-muted'
+                      }`}
+                    >
+                      ₦{(range.min / 1000000).toFixed(0)}M
+                    </button>
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
+
+            {/* Max Price Filter */}
+            <Popover>
+              <PopoverTrigger asChild>
+                <button className="hidden sm:inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-background hover:border-foreground/30 transition-colors text-sm font-medium whitespace-nowrap">
+                  Max: {localFilters.maxPrice === Infinity ? 'Any' : `₦${(localFilters.maxPrice / 1000000).toFixed(0)}M`}
+                  <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                </button>
+              </PopoverTrigger>
+              <PopoverContent className="w-48 p-2 bg-background z-50">
+                <div className="flex flex-col gap-1">
+                  <button
+                    onClick={() => {
+                      updateFilter('maxPrice', Infinity);
+                      onFiltersChange?.({ ...localFilters, maxPrice: Infinity });
+                    }}
+                    className={`px-3 py-2 text-left rounded-lg text-sm transition-colors ${
+                      localFilters.maxPrice === Infinity
+                        ? 'bg-primary text-primary-foreground'
+                        : 'hover:bg-muted'
+                    }`}
+                  >
+                    Any
+                  </button>
+                  {priceRanges.slice(1).map((range) => (
+                    <button
+                      key={range.label}
+                      onClick={() => {
+                        updateFilter('maxPrice', range.max);
+                        onFiltersChange?.({ ...localFilters, maxPrice: range.max });
+                      }}
+                      className={`px-3 py-2 text-left rounded-lg text-sm transition-colors ${
+                        localFilters.maxPrice === range.max
+                          ? 'bg-primary text-primary-foreground'
+                          : 'hover:bg-muted'
+                      }`}
+                    >
+                      {range.max === Infinity ? 'No Max' : `₦${(range.max / 1000000).toFixed(0)}M`}
                     </button>
                   ))}
                 </div>
@@ -255,19 +314,18 @@ export const HeroSection = ({
                   </button>
                 </div>
 
-                {/* Price Range Filter */}
+                {/* Size Filter */}
                 <div>
-                  <h4 className="text-sm font-medium mb-2">Price Range</h4>
+                  <h4 className="text-sm font-medium mb-2">Size</h4>
                   <div className="flex flex-col gap-1">
-                    {priceRanges.map((range) => (
+                    {sizeRanges.map((range) => (
                       <button
                         key={range.label}
                         onClick={() => {
-                          updateFilter('minPrice', range.min);
-                          updateFilter('maxPrice', range.max);
+                          updateFilter('sizeRange', { min: range.min, max: range.max });
                         }}
                         className={`px-3 py-2 text-left rounded-lg text-sm transition-colors ${
-                          localFilters.minPrice === range.min && localFilters.maxPrice === range.max
+                          localFilters.sizeRange.min === range.min && localFilters.sizeRange.max === range.max
                             ? 'bg-primary text-primary-foreground'
                             : 'hover:bg-muted'
                         }`}
