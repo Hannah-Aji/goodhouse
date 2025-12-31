@@ -95,6 +95,7 @@ export const HeroSection = ({
 }: HeroSectionProps) => {
   const [localFilters, setLocalFilters] = useState<Filters>(filters);
   const [isFiltersOpen, setIsFiltersOpen] = useState(false);
+  const [isPriceOpen, setIsPriceOpen] = useState(false);
 
   const updateFilter = <K extends keyof Filters>(key: K, value: Filters[K]) => {
     const newFilters = { ...localFilters, [key]: value };
@@ -207,130 +208,144 @@ export const HeroSection = ({
         </div>
       </div>
 
-      {/* Filters Bar */}
-      <div className="container py-4 border-t border-border">
-        <div className="flex items-center justify-between gap-3">
-          <div className="flex items-center gap-2 overflow-x-auto pb-1">
-            {/* Bedrooms Filter */}
-            <Popover>
-              <PopoverTrigger asChild>
-                <button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-background hover:border-foreground/30 transition-colors text-sm font-medium whitespace-nowrap">
-                  Beds: {localFilters.bedrooms}
-                  <ChevronDown className="h-4 w-4 text-muted-foreground" strokeWidth={2.5} />
-                </button>
-              </PopoverTrigger>
-              <PopoverContent className="w-48 p-2 bg-background z-50">
-                <div className="flex flex-col gap-1">
-                  {bedroomOptions.map((option) => (
-                    <button
-                      key={option}
-                      onClick={() => {
-                        updateFilter('bedrooms', option);
-                        onFiltersChange?.({ ...localFilters, bedrooms: option });
-                      }}
-                      className={`px-3 py-2 text-left rounded-lg text-sm transition-colors ${
-                        localFilters.bedrooms === option
-                          ? 'bg-primary text-primary-foreground'
-                          : 'hover:bg-muted'
-                      }`}
-                    >
-                      {option === 'Any' ? 'Any' : `${option} Bedroom${option === '1' ? '' : 's'}`}
-                    </button>
-                  ))}
-                </div>
-              </PopoverContent>
-            </Popover>
+      {/* Sticky Filters Bar */}
+      <div className="sticky top-20 z-40 bg-background border-b border-border">
+        <div className="container py-4">
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center gap-2 overflow-x-auto pb-1">
+              {/* Bedrooms Filter */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-background hover:border-foreground/30 transition-colors text-sm font-medium whitespace-nowrap">
+                    Beds: {localFilters.bedrooms}
+                    <ChevronDown className="h-4 w-4 text-muted-foreground" strokeWidth={2.5} />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-48 p-2 bg-background z-50">
+                  <div className="flex flex-col gap-1">
+                    {bedroomOptions.map((option) => (
+                      <button
+                        key={option}
+                        onClick={() => {
+                          updateFilter('bedrooms', option);
+                          onFiltersChange?.({ ...localFilters, bedrooms: option });
+                        }}
+                        className={`px-3 py-2 text-left rounded-lg text-sm transition-colors ${
+                          localFilters.bedrooms === option
+                            ? 'bg-primary text-primary-foreground'
+                            : 'hover:bg-muted'
+                        }`}
+                      >
+                        {option === 'Any' ? 'Any' : `${option} Bedroom${option === '1' ? '' : 's'}`}
+                      </button>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
 
-            {/* Bathrooms Filter */}
-            <Popover>
-              <PopoverTrigger asChild>
-                <button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-background hover:border-foreground/30 transition-colors text-sm font-medium whitespace-nowrap">
-                  Baths: {localFilters.bathrooms}
-                  <ChevronDown className="h-4 w-4 text-muted-foreground" strokeWidth={2.5} />
-                </button>
-              </PopoverTrigger>
-              <PopoverContent className="w-48 p-2 bg-background z-50">
-                <div className="flex flex-col gap-1">
-                  {bathroomOptions.map((option) => (
-                    <button
-                      key={option}
-                      onClick={() => {
-                        updateFilter('bathrooms', option);
-                        onFiltersChange?.({ ...localFilters, bathrooms: option });
-                      }}
-                      className={`px-3 py-2 text-left rounded-lg text-sm transition-colors ${
-                        localFilters.bathrooms === option
-                          ? 'bg-primary text-primary-foreground'
-                          : 'hover:bg-muted'
-                      }`}
-                    >
-                      {option === 'Any' ? 'Any' : `${option} Bathroom${option === '1' ? '' : 's'}`}
-                    </button>
-                  ))}
-                </div>
-              </PopoverContent>
-            </Popover>
+              {/* Bathrooms Filter */}
+              <Popover>
+                <PopoverTrigger asChild>
+                  <button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-background hover:border-foreground/30 transition-colors text-sm font-medium whitespace-nowrap">
+                    Baths: {localFilters.bathrooms}
+                    <ChevronDown className="h-4 w-4 text-muted-foreground" strokeWidth={2.5} />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-48 p-2 bg-background z-50">
+                  <div className="flex flex-col gap-1">
+                    {bathroomOptions.map((option) => (
+                      <button
+                        key={option}
+                        onClick={() => {
+                          updateFilter('bathrooms', option);
+                          onFiltersChange?.({ ...localFilters, bathrooms: option });
+                        }}
+                        className={`px-3 py-2 text-left rounded-lg text-sm transition-colors ${
+                          localFilters.bathrooms === option
+                            ? 'bg-primary text-primary-foreground'
+                            : 'hover:bg-muted'
+                        }`}
+                      >
+                        {option === 'Any' ? 'Any' : `${option} Bathroom${option === '1' ? '' : 's'}`}
+                      </button>
+                    ))}
+                  </div>
+                </PopoverContent>
+              </Popover>
 
-            {/* Min Price Filter */}
-            <Popover>
-              <PopoverTrigger asChild>
-                <button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-background hover:border-foreground/30 transition-colors text-sm font-medium whitespace-nowrap">
-                  Min: {localFilters.minPrice === 0 ? 'Any' : `₦${(localFilters.minPrice / 1000000).toFixed(0)}M`}
-                  <ChevronDown className="h-4 w-4 text-muted-foreground" strokeWidth={2.5} />
-                </button>
-              </PopoverTrigger>
-              <PopoverContent className="w-48 p-2 bg-background z-50">
-                <div className="flex flex-col gap-1">
-                  {minPriceOptions.map((option, index) => (
-                    <button
-                      key={`min-${option.value}-${index}`}
-                      onClick={() => {
-                        updateFilter('minPrice', option.value);
-                        onFiltersChange?.({ ...localFilters, minPrice: option.value });
-                      }}
-                      className={`px-3 py-2 text-left rounded-lg text-sm transition-colors ${
-                        localFilters.minPrice === option.value
-                          ? 'bg-primary text-primary-foreground'
-                          : 'hover:bg-muted'
-                      }`}
-                    >
-                      {option.label}
-                    </button>
-                  ))}
-                </div>
-              </PopoverContent>
-            </Popover>
+              {/* Combined Price Filter */}
+              <Popover open={isPriceOpen} onOpenChange={setIsPriceOpen}>
+                <PopoverTrigger asChild>
+                  <button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-background hover:border-foreground/30 transition-colors text-sm font-medium whitespace-nowrap">
+                    Price: {localFilters.minPrice === 0 && localFilters.maxPrice === Infinity 
+                      ? 'Any' 
+                      : `${localFilters.minPrice === 0 ? 'Any' : `₦${(localFilters.minPrice / 1000000).toFixed(0)}M`} - ${localFilters.maxPrice === Infinity ? 'Any' : `₦${(localFilters.maxPrice / 1000000).toFixed(0)}M`}`
+                    }
+                    <ChevronDown className="h-4 w-4 text-muted-foreground" strokeWidth={2.5} />
+                  </button>
+                </PopoverTrigger>
+                <PopoverContent className="w-80 p-4 bg-background z-50" align="start">
+                  <div className="space-y-4">
+                    <h4 className="text-sm font-semibold">Price Range</h4>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      {/* Min Price */}
+                      <div className="space-y-2">
+                        <label className="text-xs font-medium text-muted-foreground">Minimum</label>
+                        <div className="flex flex-col gap-1 max-h-40 overflow-y-auto border border-border rounded-lg p-1">
+                          {minPriceOptions.map((option, index) => (
+                            <button
+                              key={`min-${option.value}-${index}`}
+                              onClick={() => {
+                                updateFilter('minPrice', option.value);
+                                onFiltersChange?.({ ...localFilters, minPrice: option.value });
+                              }}
+                              className={`px-3 py-2 text-left rounded-md text-sm transition-colors ${
+                                localFilters.minPrice === option.value
+                                  ? 'bg-primary text-primary-foreground'
+                                  : 'hover:bg-muted'
+                              }`}
+                            >
+                              {option.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
 
-            {/* Max Price Filter */}
-            <Popover>
-              <PopoverTrigger asChild>
-                <button className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl border border-border bg-background hover:border-foreground/30 transition-colors text-sm font-medium whitespace-nowrap">
-                  Max: {localFilters.maxPrice === Infinity ? 'Any' : `₦${(localFilters.maxPrice / 1000000).toFixed(0)}M`}
-                  <ChevronDown className="h-4 w-4 text-muted-foreground" strokeWidth={2.5} />
-                </button>
-              </PopoverTrigger>
-              <PopoverContent className="w-48 p-2 bg-background z-50">
-                <div className="flex flex-col gap-1">
-                  {maxPriceOptions.map((option, index) => (
+                      {/* Max Price */}
+                      <div className="space-y-2">
+                        <label className="text-xs font-medium text-muted-foreground">Maximum</label>
+                        <div className="flex flex-col gap-1 max-h-40 overflow-y-auto border border-border rounded-lg p-1">
+                          {maxPriceOptions.map((option, index) => (
+                            <button
+                              key={`max-${option.value}-${index}`}
+                              onClick={() => {
+                                updateFilter('maxPrice', option.value);
+                                onFiltersChange?.({ ...localFilters, maxPrice: option.value });
+                              }}
+                              className={`px-3 py-2 text-left rounded-md text-sm transition-colors ${
+                                localFilters.maxPrice === option.value
+                                  ? 'bg-primary text-primary-foreground'
+                                  : 'hover:bg-muted'
+                              }`}
+                            >
+                              {option.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
                     <button
-                      key={`max-${option.value}-${index}`}
-                      onClick={() => {
-                        updateFilter('maxPrice', option.value);
-                        onFiltersChange?.({ ...localFilters, maxPrice: option.value });
-                      }}
-                      className={`px-3 py-2 text-left rounded-lg text-sm transition-colors ${
-                        localFilters.maxPrice === option.value
-                          ? 'bg-primary text-primary-foreground'
-                          : 'hover:bg-muted'
-                      }`}
+                      onClick={() => setIsPriceOpen(false)}
+                      className="w-full py-2 px-4 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:bg-primary/90 transition-colors"
                     >
-                      {option.label}
+                      Apply
                     </button>
-                  ))}
-                </div>
-              </PopoverContent>
-            </Popover>
-          </div>
+                  </div>
+                </PopoverContent>
+              </Popover>
+            </div>
 
           {/* All Filters Button - Using Modal */}
           <Dialog open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
@@ -448,6 +463,7 @@ export const HeroSection = ({
               </div>
             </DialogContent>
           </Dialog>
+          </div>
         </div>
       </div>
     </section>
