@@ -1,11 +1,46 @@
 import { Property } from '@/data/properties';
 import { PropertyCard } from './PropertyCard';
-import { Loader2 } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface FeaturedPropertiesProps {
   properties: Property[];
   isLoading?: boolean;
 }
+
+const PropertySkeleton = () => (
+  <div className="rounded-xl overflow-hidden border border-border bg-card">
+    {/* Image skeleton */}
+    <Skeleton className="aspect-[4/3] w-full" />
+    
+    {/* Content skeleton */}
+    <div className="p-4 space-y-3">
+      {/* Badge skeleton */}
+      <div className="flex gap-2">
+        <Skeleton className="h-5 w-16 rounded-full" />
+        <Skeleton className="h-5 w-20 rounded-full" />
+      </div>
+      
+      {/* Title skeleton */}
+      <Skeleton className="h-5 w-full" />
+      <Skeleton className="h-5 w-3/4" />
+      
+      {/* Location skeleton */}
+      <Skeleton className="h-4 w-1/2" />
+      
+      {/* Details skeleton */}
+      <div className="flex gap-4 pt-2">
+        <Skeleton className="h-4 w-12" />
+        <Skeleton className="h-4 w-12" />
+        <Skeleton className="h-4 w-16" />
+      </div>
+      
+      {/* Price skeleton */}
+      <div className="pt-2 border-t border-border">
+        <Skeleton className="h-6 w-24" />
+      </div>
+    </div>
+  </div>
+);
 
 export const FeaturedProperties = ({ 
   properties,
@@ -16,8 +51,11 @@ export const FeaturedProperties = ({
     return (
       <section className="py-8">
         <div className="container">
-          <div className="flex items-center justify-center py-20">
-            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <Skeleton className="h-4 w-32 mb-6" />
+          <div className="grid gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {Array.from({ length: 8 }).map((_, index) => (
+              <PropertySkeleton key={index} />
+            ))}
           </div>
         </div>
       </section>

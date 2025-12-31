@@ -385,8 +385,8 @@ const PropertyDetails = () => {
               <div className="sticky top-24 space-y-6">
                 {/* Price Summary - Receipt Style */}
                 <div className="bg-card border border-border rounded-xl overflow-hidden shadow-sm">
-                  {/* Receipt Header */}
-                  <div className="bg-foreground text-background px-6 py-4 text-center">
+                  {/* Receipt Header - Green */}
+                  <div className="bg-emerald-500 text-white px-6 py-4 text-center">
                     <h3 className="text-sm font-medium tracking-wider uppercase">Price Summary</h3>
                   </div>
                   
@@ -506,6 +506,21 @@ const PropertyDetails = () => {
 
                   <p className="text-xs text-muted-foreground text-center mt-4">
                     Response time: Usually within 1 hour
+                  </p>
+                </div>
+
+                {/* Source Attribution */}
+                <div className="bg-muted/50 border border-border rounded-xl p-4 text-center">
+                  <p className="text-xs text-muted-foreground">
+                    This listing was scraped from{' '}
+                    <a 
+                      href="https://nigeriapropertycenter.com" 
+                      target="_blank" 
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline font-medium"
+                    >
+                      nigeriapropertycenter.com
+                    </a>
                   </p>
                 </div>
               </div>
