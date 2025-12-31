@@ -130,23 +130,43 @@ export const HeroSection = ({
 
   return (
     <section className="border-b border-border bg-background">
-      {/* Category Tabs */}
-      <div className="container py-5">
-        <div className="flex items-center justify-center gap-10 overflow-x-auto pb-1">
-          {categories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => onCategoryChange?.(category.id)}
-              className={`flex flex-col items-center gap-2 min-w-[64px] pb-3 border-b-2 transition-all ${
-                activeCategory === category.id
-                  ? 'border-foreground text-foreground'
-                  : 'border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30'
-              }`}
-            >
-              <span className="text-2xl">{category.icon}</span>
-              <span className="text-xs font-medium whitespace-nowrap">{category.label}</span>
-            </button>
-          ))}
+      {/* Category Tabs with Blurred Logo Background */}
+      <div className="relative overflow-hidden">
+        {/* Blurred Background Logo */}
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+          <div className="relative">
+            {/* Purple glow effect */}
+            <div className="absolute inset-0 bg-gradient-to-br from-purple-600/30 via-purple-900/20 to-black/30 blur-3xl scale-150" />
+            {/* Logo text */}
+            <div className="relative text-6xl md:text-8xl font-black tracking-tighter select-none blur-[2px] opacity-[0.08]">
+              <span className="bg-gradient-to-br from-purple-500 via-purple-800 to-black bg-clip-text text-transparent">
+                GOOD
+              </span>
+              <br />
+              <span className="bg-gradient-to-br from-purple-400 via-purple-700 to-black bg-clip-text text-transparent">
+                HOUSE
+              </span>
+            </div>
+          </div>
+        </div>
+        
+        <div className="container py-5 relative z-10">
+          <div className="flex items-center justify-center gap-10 overflow-x-auto pb-1">
+            {categories.map((category) => (
+              <button
+                key={category.id}
+                onClick={() => onCategoryChange?.(category.id)}
+                className={`flex flex-col items-center gap-2 min-w-[64px] pb-3 border-b-2 transition-all ${
+                  activeCategory === category.id
+                    ? 'border-foreground text-foreground'
+                    : 'border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30'
+                }`}
+              >
+                <span className="text-2xl">{category.icon}</span>
+                <span className="text-xs font-medium whitespace-nowrap">{category.label}</span>
+              </button>
+            ))}
+          </div>
         </div>
       </div>
 
