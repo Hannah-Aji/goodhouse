@@ -13,17 +13,17 @@ const defaultFilters: Filters = {
   verified: false,
   serviced: 'any',
   furnished: 'any',
+  minPrice: 0,
+  maxPrice: Infinity,
 };
 
 const Index = () => {
-  const [activeCategory, setActiveCategory] = useState('all');
+  const [activeCategory, setActiveCategory] = useState('house');
   const [searchFilters, setSearchFilters] = useState<SearchFilters>({
     state: '',
     city: '',
     locality: '',
     listingType: 'all',
-    minPrice: '',
-    maxPrice: '',
   });
   const [filters, setFilters] = useState<Filters>(defaultFilters);
 
@@ -61,14 +61,12 @@ const Index = () => {
         return false;
       }
 
-      // Price filters
-      if (searchFilters.minPrice) {
-        const minPrice = parseFloat(searchFilters.minPrice);
-        if (property.price < minPrice) return false;
+      // Price filters from hero section filters
+      if (filters.minPrice > 0) {
+        if (property.price < filters.minPrice) return false;
       }
-      if (searchFilters.maxPrice) {
-        const maxPrice = parseFloat(searchFilters.maxPrice);
-        if (property.price > maxPrice) return false;
+      if (filters.maxPrice < Infinity) {
+        if (property.price > filters.maxPrice) return false;
       }
 
       // Bedroom filter

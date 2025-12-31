@@ -20,28 +20,11 @@ import { getStates, getCities, getLocalities } from '@/data/nigerianLocations';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useToast } from '@/hooks/use-toast';
 
-const priceOptions = [
-  { value: 'any', label: 'Any' },
-  { value: '500000', label: '₦500K' },
-  { value: '1000000', label: '₦1M' },
-  { value: '2000000', label: '₦2M' },
-  { value: '5000000', label: '₦5M' },
-  { value: '10000000', label: '₦10M' },
-  { value: '20000000', label: '₦20M' },
-  { value: '50000000', label: '₦50M' },
-  { value: '100000000', label: '₦100M' },
-  { value: '200000000', label: '₦200M' },
-  { value: '500000000', label: '₦500M' },
-  { value: '1000000000', label: '₦1B' },
-];
-
 export interface SearchFilters {
   state: string;
   city: string;
   locality: string;
   listingType: 'all' | 'rent' | 'sale';
-  minPrice: string;
-  maxPrice: string;
 }
 
 interface NavbarProps {
@@ -54,8 +37,6 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
   const [city, setCity] = useState(searchFilters?.city || '');
   const [locality, setLocality] = useState(searchFilters?.locality || '');
   const [listingType, setListingType] = useState<'all' | 'rent' | 'sale'>(searchFilters?.listingType || 'all');
-  const [minPrice, setMinPrice] = useState(searchFilters?.minPrice || '');
-  const [maxPrice, setMaxPrice] = useState(searchFilters?.maxPrice || '');
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isAnimatingOut, setIsAnimatingOut] = useState(false);
   const { toast } = useToast();
@@ -76,23 +57,18 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
   }, [city]);
 
   const validateAndSearch = async () => {
-    const minVal = minPrice === 'any' ? '' : minPrice;
-    const maxVal = maxPrice === 'any' ? '' : maxPrice;
-    
     setIsAnimatingOut(true);
     
     await new Promise(resolve => setTimeout(resolve, 400));
     
-    onSearch?.({ state: state || 'all', city: city || 'all', locality: locality || 'all', listingType, minPrice: minVal, maxPrice: maxVal });
+    onSearch?.({ state: state || 'all', city: city || 'all', locality: locality || 'all', listingType });
     setIsSearchOpen(false);
     setIsAnimatingOut(false);
     return true;
   };
 
   const handleDesktopSearch = () => {
-    const minVal = minPrice === 'any' ? '' : minPrice;
-    const maxVal = maxPrice === 'any' ? '' : maxPrice;
-    onSearch?.({ state: state || 'all', city: city || 'all', locality: locality || 'all', listingType, minPrice: minVal, maxPrice: maxVal });
+    onSearch?.({ state: state || 'all', city: city || 'all', locality: locality || 'all', listingType });
   };
 
   return (
@@ -170,42 +146,6 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
                   <SelectItem value="all">All</SelectItem>
                   <SelectItem value="rent">For Rent</SelectItem>
                   <SelectItem value="sale">For Sale</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <span className="h-6 w-px bg-border" />
-            
-            {/* Min Price */}
-            <div className="px-2">
-              <Select value={minPrice} onValueChange={setMinPrice}>
-                <SelectTrigger className="border-0 shadow-none h-auto p-0 min-w-[60px] focus:ring-0">
-                  <SelectValue placeholder="Min ₦" />
-                </SelectTrigger>
-                <SelectContent className="bg-background z-50">
-                  {priceOptions.map((option) => (
-                    <SelectItem key={`min-${option.value}`} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <span className="h-6 w-px bg-border" />
-            
-            {/* Max Price */}
-            <div className="px-2">
-              <Select value={maxPrice} onValueChange={setMaxPrice}>
-                <SelectTrigger className="border-0 shadow-none h-auto p-0 min-w-[60px] focus:ring-0">
-                  <SelectValue placeholder="Max ₦" />
-                </SelectTrigger>
-                <SelectContent className="bg-background z-50">
-                  {priceOptions.map((option) => (
-                    <SelectItem key={`max-${option.value}`} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
                 </SelectContent>
               </Select>
             </div>
@@ -368,39 +308,6 @@ export const Navbar = ({ onSearch, searchFilters }: NavbarProps) => {
                         <SelectItem value="sale">For Sale</SelectItem>
                       </SelectContent>
                     </Select>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-3">
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-muted-foreground">Min Price</label>
-                      <Select value={minPrice} onValueChange={setMinPrice}>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Min ₦" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-background z-[60]">
-                          {priceOptions.map((option) => (
-                            <SelectItem key={`mob-min-${option.value}`} value={option.value}>
-                              {option.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium text-muted-foreground">Max Price</label>
-                      <Select value={maxPrice} onValueChange={setMaxPrice}>
-                        <SelectTrigger className="w-full">
-                          <SelectValue placeholder="Max ₦" />
-                        </SelectTrigger>
-                        <SelectContent className="bg-background z-[60]">
-                          {priceOptions.map((option) => (
-                            <SelectItem key={`mob-max-${option.value}`} value={option.value}>
-                              {option.label}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    </div>
                   </div>
                   
                   <Button 
