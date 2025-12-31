@@ -141,12 +141,12 @@ export const HeroSection = ({
               repeat: Infinity,
               ease: "easeInOut"
             }}
-            className="text-3xl md:text-5xl font-black tracking-tight text-cyan-400 blur-[2px] select-none"
+            className="text-3xl md:text-5xl font-black tracking-tight text-cyan-400 blur-[1px] select-none"
             style={{
               textShadow: '0 0 60px rgba(34, 211, 238, 0.8), 0 0 120px rgba(34, 211, 238, 0.5), 0 0 180px rgba(34, 211, 238, 0.3)'
             }}
           >
-            good&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;house
+            good&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;house
           </motion.div>
         </div>
         
