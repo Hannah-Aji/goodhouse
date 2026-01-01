@@ -136,28 +136,7 @@ export const HeroSection = ({
           style={{ backgroundImage: `url(${lagosBackground})` }}
         />
         {/* Dark Overlay */}
-        <div className="absolute inset-0 bg-black/50" />
-        
-        {/* Blurred Neon Blue Logo Background */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <motion.div
-            animate={{
-              scale: [1, 1.02, 1],
-              opacity: [0.15, 0.25, 0.15],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut"
-            }}
-            className="text-3xl md:text-5xl font-black tracking-tight text-cyan-400 blur-[1px] select-none"
-            style={{
-              textShadow: '0 0 60px rgba(34, 211, 238, 0.8), 0 0 120px rgba(34, 211, 238, 0.5), 0 0 180px rgba(34, 211, 238, 0.3)'
-            }}
-          >
-            good&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;house
-          </motion.div>
-        </div>
+        <div className="absolute inset-0 bg-black/70" />
         
         <div className="container py-6 relative z-10">
           <div className="flex items-center justify-center gap-12 overflow-x-auto pb-1">
@@ -179,8 +158,8 @@ export const HeroSection = ({
         </div>
       </div>
 
-      {/* Sticky Filters Bar */}
-      <div className="sticky top-20 z-40 bg-background border-b border-border">
+      {/* Fixed Filters Bar */}
+      <div className="fixed top-[64px] left-0 right-0 z-40 bg-background border-b border-border">
         <div className="container py-4">
           <div className="flex items-center gap-2 overflow-x-auto pb-1">
             {/* Bedrooms Filter - Modal */}
