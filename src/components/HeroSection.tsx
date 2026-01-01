@@ -158,8 +158,8 @@ export const HeroSection = ({
         </div>
       </div>
 
-      {/* Fixed Filters Bar */}
-      <div className="fixed top-[64px] left-0 right-0 z-40 bg-background border-b border-border">
+      {/* Sticky Filters Bar - sticks below navbar when scrolling */}
+      <div className="sticky top-[64px] z-40 bg-background border-b border-border">
         <div className="container py-4">
           <div className="flex items-center gap-2 overflow-x-auto pb-1">
             {/* Bedrooms Filter - Modal */}
