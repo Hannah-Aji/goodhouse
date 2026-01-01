@@ -9,6 +9,7 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import lagosBackground from '@/assets/lagos-background.jpg';
 
 const categories = [
   { id: 'house', label: 'Houses', icon: '🏡' },
@@ -127,8 +128,16 @@ export const HeroSection = ({
 
   return (
     <section className="border-b border-border">
-      {/* Category Tabs with Blurred Neon Blue Logo */}
-      <div className="relative overflow-hidden bg-background">
+      {/* Category Tabs with Lagos Background */}
+      <div className="relative overflow-hidden">
+        {/* Blurred Background Image */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center blur-[2px] scale-105"
+          style={{ backgroundImage: `url(${lagosBackground})` }}
+        />
+        {/* Dark Overlay */}
+        <div className="absolute inset-0 bg-black/50" />
+        
         {/* Blurred Neon Blue Logo Background */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <motion.div
@@ -158,8 +167,8 @@ export const HeroSection = ({
                 onClick={() => onCategoryChange?.(category.id)}
                 className={`flex flex-col items-center gap-2 min-w-[64px] pb-3 border-b-2 transition-all ${
                   activeCategory === category.id
-                    ? 'border-foreground text-foreground'
-                    : 'border-transparent text-muted-foreground hover:text-foreground hover:border-muted-foreground/30'
+                    ? 'border-white text-white'
+                    : 'border-transparent text-white/70 hover:text-white hover:border-white/30'
                 }`}
               >
                 <span className="text-2xl">{category.icon}</span>
