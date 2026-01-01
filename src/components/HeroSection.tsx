@@ -160,8 +160,8 @@ export const HeroSection = ({
 
       {/* Sticky Filters Bar - sticks below navbar when scrolling */}
       <div className="sticky top-[64px] z-40 bg-background border-b border-border">
-        <div className="container py-4">
-          <div className="flex items-center gap-2 overflow-x-auto pb-1">
+        <div className="container py-3">
+          <div className="flex items-center gap-2 overflow-x-auto">
             {/* Bedrooms Filter - Modal */}
             <Dialog open={isBedsOpen} onOpenChange={setIsBedsOpen}>
               <DialogTrigger asChild>
